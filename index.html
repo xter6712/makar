@@ -112,8 +112,10 @@
 
         /* ШПАРГАЛКА */
         .modal-box.cheatsheet { width: 100%; height: 100%; max-height: 100vh; max-width: 100%; border-radius: 0; padding: 15px; }
+        
+        /* 4 вкладки в шпаргалке */
         .cheat-tabs { display: flex; gap: 5px; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px; }
-        .cheat-tabs button { flex: 1; padding: 10px 5px; border: none; border-radius: 6px; background: #333; color: #ccc; font-size: 14px; font-weight: bold; }
+        .cheat-tabs button { flex: 1; padding: 10px 2px; border: none; border-radius: 6px; background: #333; color: #ccc; font-size: 13px; font-weight: bold; }
         .cheat-tabs button.active { background: #37c; color: #fff; }
         
         .cheat-filters { display: flex; gap: 6px; margin-bottom: 15px; flex-wrap: wrap; }
@@ -228,10 +230,13 @@
     <div class="modal" id="cheatsheetModal">
         <div class="modal-box cheatsheet">
             <h3>📚 Шпаргалка <span class="close" onclick="cheatsheetModal.classList.remove('show')">✕</span></h3>
+            
+            <!-- Теперь 4 вкладки! -->
             <div class="cheat-tabs">
                 <button class="active" onclick="switchCheatTab('physics')">⚡ Физика</button>
                 <button onclick="switchCheatTab('algebra')">📐 Алгебра</button>
                 <button onclick="switchCheatTab('geometry')">📏 Геометрия</button>
+                <button onclick="switchCheatTab('fsu')" style="color:#f80; border-color:#f80;">🔥 ФСУ</button>
             </div>
             <div class="cheat-filters" id="cheatFilters"></div>
             <div class="cheat-content" id="cheatContent">
@@ -248,12 +253,16 @@
                     <div class="formula-card show" data-class="7" onclick="insFormula('N = A / t')"><div class="formula-title">7 кл · Мощность</div><div class="formula-math">N = A / t</div></div>
                     <div class="formula-card show" data-class="7" onclick="insFormula('p_г = p * g * h')"><div class="formula-title">7 кл · Давл. жидкости</div><div class="formula-math">p = ρ·g·h</div></div>
 
-                    <!-- 8 КЛАСС -->
-                    <div class="formula-card show" data-class="8" onclick="insFormula('Q = c * m * (t2 - t1)')"><div class="formula-title">8 кл · Теплота</div><div class="formula-math">Q = c·m·Δt</div></div>
+                    <!-- 8 КЛАСС (Расширенный) -->
+                    <div class="formula-card show" data-class="8" onclick="insFormula('Q = c * m * (t2 - t1)')"><div class="formula-title">8 кл · Теплота нагрева</div><div class="formula-math">Q = c·m·Δt</div></div>
+                    <div class="formula-card show" data-class="8" onclick="insFormula('Q = L * m')"><div class="formula-title">8 кл · Парообразование</div><div class="formula-math">Q = L·m</div></div>
                     <div class="formula-card show" data-class="8" onclick="insFormula('Q = q * m')"><div class="formula-title">8 кл · Сгорание топлива</div><div class="formula-math">Q = q·m</div></div>
                     <div class="formula-card show" data-class="8" onclick="insFormula('I = U / R')"><div class="formula-title">8 кл · Закон Ома</div><div class="formula-math">I = U / R</div></div>
+                    <div class="formula-card show" data-class="8" onclick="insFormula('U = I * R')"><div class="formula-title">8 кл · Напряжение</div><div class="formula-math">U = I·R</div></div>
+                    <div class="formula-card show" data-class="8" onclick="insFormula('R = U / I')"><div class="formula-title">8 кл · Сопротивление</div><div class="formula-math">R = U / I</div></div>
                     <div class="formula-card show" data-class="8" onclick="insFormula('P = I * U')"><div class="formula-title">8 кл · Мощность тока</div><div class="formula-math">P = I·U</div></div>
-                    <div class="formula-card show" data-class="8" onclick="insFormula('R = p * l / S')"><div class="formula-title">8 кл · Сопротивление</div><div class="formula-math">R = ρ·l/S</div></div>
+                    <div class="formula-card show" data-class="8" onclick="insFormula('Q = I^2 * R * t')"><div class="formula-title">8 кл · Закон Джоуля-Ленца</div><div class="formula-math">Q = I²·R·t</div></div>
+                    <div class="formula-card show" data-class="8" onclick="insFormula('R = p * l / S')"><div class="formula-title">8 кл · Сопротивление провода</div><div class="formula-math">R = ρ·l/S</div></div>
 
                     <!-- 9 КЛАСС -->
                     <div class="formula-card show" data-class="9" onclick="insFormula('F = m * a')"><div class="formula-title">9 кл · 2-й з. Ньютона</div><div class="formula-math">F = m · a</div></div>
@@ -271,30 +280,26 @@
 
                 <!-- ==================== АЛГЕБРА ==================== -->
                 <div id="tab-algebra" class="cheat-section" style="display: none;">
-                    <!-- 7 КЛАСС -->
                     <div class="formula-card show" data-class="7" onclick="insFormula('(a+b)^2 = a^2 + 2*a*b + b^2')"><div class="formula-title">7 кл · Квадрат суммы</div><div class="formula-math">(a+b)² = a²+2ab+b²</div></div>
-                    <div class="formula-card show" data-class="7" onclick="insFormula('(a-b)^2 = a^2 - 2*a*b + b^2')"><div class="formula-title">7 кл · Квадрат разности</div><div class="formula-math">(a-b)² = a²-2ab+b²</div></div>
-                    <div class="formula-card show" data-class="7" onclick="insFormula('a^2 - b^2 = (a-b)*(a+b)')"><div class="formula-title">7 кл · Разность квадратов</div><div class="formula-math">a² - b² = (a-b)(a+b)</div></div>
                     <div class="formula-card show" data-class="7" onclick="insFormula('y = k * x + b')"><div class="formula-title">7 кл · Линейная функция</div><div class="formula-math">y = kx + b</div></div>
-                    <div class="formula-card show" data-class="7" onclick="insFormula('(a*b)^n = a^n * b^n')"><div class="formula-title">7 кл · Степень произв.</div><div class="formula-math">(ab)ⁿ = aⁿbⁿ</div></div>
-
-                    <!-- 8 КЛАСС -->
+                    
+                    <!-- 8 КЛАСС (Расширенный) -->
                     <div class="formula-card show" data-class="8" onclick="insFormula('D = b^2 - 4*a*c')"><div class="formula-title">8 кл · Дискриминант</div><div class="formula-math">D = b² - 4ac</div></div>
                     <div class="formula-card show" data-class="8" onclick="insFormula('(-b + sqrt(D)) / (2*a)')"><div class="formula-title">8 кл · Корень x₁</div><div class="formula-math">x₁ = (-b+√D)/2a</div></div>
-                    <div class="formula-card show" data-class="8" onclick="insFormula('x1 + x2 = -b/a')"><div class="formula-title">8 кл · Теорема Виета</div><div class="formula-math">x₁+x₂ = -b/a</div></div>
-                    <div class="formula-card show" data-class="8" onclick="insFormula('sqrt(a*b) = sqrt(a)*sqrt(b)')"><div class="formula-title">8 кл · Корень произв.</div><div class="formula-math">√(ab) = √a·√b</div></div>
+                    <div class="formula-card show" data-class="8" onclick="insFormula('x1 + x2 = -b/a')"><div class="formula-title">8 кл · Теорема Виета (сумма)</div><div class="formula-math">x₁+x₂ = -b/a</div></div>
+                    <div class="formula-card show" data-class="8" onclick="insFormula('x1 * x2 = c/a')"><div class="formula-title">8 кл · Теорема Виета (произв.)</div><div class="formula-math">x₁·x₂ = c/a</div></div>
+                    <div class="formula-card show" data-class="8" onclick="insFormula('sqrt(a*b) = sqrt(a)*sqrt(b)')"><div class="formula-title">8 кл · Корень произведения</div><div class="formula-math">√(ab) = √a·√b</div></div>
+                    <div class="formula-card show" data-class="8" onclick="insFormula('sqrt(a/b) = sqrt(a)/sqrt(b)')"><div class="formula-title">8 кл · Корень дроби</div><div class="formula-math">√(a/b) = √a/√b</div></div>
+                    <div class="formula-card show" data-class="8" onclick="insFormula('a^(-n) = 1 / a^n')"><div class="formula-title">8 кл · Отриц. степень</div><div class="formula-math">a⁻ⁿ = 1/aⁿ</div></div>
 
                     <!-- 9 КЛАСС -->
                     <div class="formula-card show" data-class="9" onclick="insFormula('a_n = a_1 + d*(n-1)')"><div class="formula-title">9 кл · Прогрессия</div><div class="formula-math">aₙ = a₁+d(n-1)</div></div>
-                    <div class="formula-card show" data-class="9" onclick="insFormula('b_n = b_1 * q^(n-1)')"><div class="formula-title">9 кл · Геом. прогрессия</div><div class="formula-math">bₙ = b₁·qⁿ⁻¹</div></div>
-
+                    
                     <!-- 10 КЛАСС -->
                     <div class="formula-card show" data-class="10" onclick="insFormula('sin^2(a) + cos^2(a) = 1')"><div class="formula-title">10 кл · Тригонометрия</div><div class="formula-math">sin²α+cos²α = 1</div></div>
-                    <div class="formula-card show" data-class="10" onclick="insFormula('sin(2a) = 2*sin(a)*cos(a)')"><div class="formula-title">10 кл · Синус двойного</div><div class="formula-math">sin(2α) = 2sinα·cosα</div></div>
-
+                    
                     <!-- 11 КЛАСС -->
                     <div class="formula-card show" data-class="11" onclick="insFormula('log_a(b) = ln(b) / ln(a)')"><div class="formula-title">11 кл · Логарифм</div><div class="formula-math">logₐ(b) = ln(b)/ln(a)</div></div>
-                    <div class="formula-card show" data-class="11" onclick="insFormula('x^n')"><div class="formula-title">11 кл · Производная</div><div class="formula-math">(xⁿ)' = n·xⁿ⁻¹</div></div>
                 </div>
 
                 <!-- ==================== ГЕОМЕТРИЯ ==================== -->
@@ -302,24 +307,33 @@
                     <!-- 7 КЛАСС -->
                     <div class="formula-card show" data-class="7" onclick="insFormula('S = 0.5 * a * h')"><div class="formula-title">7 кл · Площадь Δ</div><div class="formula-math">S = 0.5·a·h</div></div>
                     <div class="formula-card show" data-class="7" onclick="insFormula('Сумма углов = 180')"><div class="formula-title">7 кл · Сумма углов Δ</div><div class="formula-math">∠A+∠B+∠C = 180°</div></div>
-                    <div class="formula-card show" data-class="7" onclick="insFormula('P = a + b + c')"><div class="formula-title">7 кл · Периметр Δ</div><div class="formula-math">P = a + b + c</div></div>
-                    <div class="formula-card show" data-class="7" onclick="insFormula('Смежные углы = 180')"><div class="formula-title">7 кл · Смежные углы</div><div class="formula-math">∠1 + ∠2 = 180°</div></div>
-                    <div class="formula-card show" data-class="7" onclick="insFormula('Вертикальные углы равны')"><div class="formula-title">7 кл · Вертикальные</div><div class="formula-math">∠1 = ∠2</div></div>
-
-                    <!-- 8 КЛАСС -->
+                    
+                    <!-- 8 КЛАСС (Расширенный) -->
                     <div class="formula-card show" data-class="8" onclick="insFormula('c^2 = a^2 + b^2')"><div class="formula-title">8 кл · Пифагор</div><div class="formula-math">c² = a² + b²</div></div>
                     <div class="formula-card show" data-class="8" onclick="insFormula('S = a * b')"><div class="formula-title">8 кл · Площадь прямоуг.</div><div class="formula-math">S = a · b</div></div>
                     <div class="formula-card show" data-class="8" onclick="insFormula('S = a^2')"><div class="formula-title">8 кл · Площадь квадрата</div><div class="formula-math">S = a²</div></div>
+                    <div class="formula-card show" data-class="8" onclick="insFormula('S = 0.5 * d1 * d2')"><div class="formula-title">8 кл · Площадь ромба</div><div class="formula-math">S = 0.5·d₁·d₂</div></div>
                     <div class="formula-card show" data-class="8" onclick="insFormula('S = (a+b)/2 * h')"><div class="formula-title">8 кл · Площадь трапеции</div><div class="formula-math">S = (a+b)/2 · h</div></div>
+                    <div class="formula-card show" data-class="8" onclick="insFormula('P = 4 * a')"><div class="formula-title">8 кл · Периметр квадрата</div><div class="formula-math">P = 4·a</div></div>
 
                     <!-- 9 КЛАСС -->
                     <div class="formula-card show" data-class="9" onclick="insFormula('S = pi * r^2')"><div class="formula-title">9 кл · Площадь круга</div><div class="formula-math">S = π·r²</div></div>
-                    <div class="formula-card show" data-class="9" onclick="insFormula('C = 2 * pi * r')"><div class="formula-title">9 кл · Длина окружности</div><div class="formula-math">C = 2·π·r</div></div>
                     <div class="formula-card show" data-class="9" onclick="insFormula('c^2 = a^2 + b^2 - 2*a*b*cos(C)')"><div class="formula-title">9 кл · Теорема косинусов</div><div class="formula-math">c²=a²+b²-2ab·cosC</div></div>
 
                     <!-- 10-11 КЛАСС -->
                     <div class="formula-card show" data-class="10" onclick="insFormula('V = (1/3) * S_osn * h')"><div class="formula-title">10 кл · Пирамида</div><div class="formula-math">V = 1/3·S·h</div></div>
                     <div class="formula-card show" data-class="11" onclick="insFormula('V = (4/3) * pi * r^3')"><div class="formula-title">11 кл · Шар</div><div class="formula-math">V = 4/3·π·r³</div></div>
+                </div>
+
+                <!-- ==================== ФСУ (НОВАЯ ВКЛАДКА) ==================== -->
+                <div id="tab-fsu" class="cheat-section" style="display: none;">
+                    <div class="formula-card show" data-class="all" onclick="insFormula('(a + b)^2 = a^2 + 2*a*b + b^2')"><div class="formula-title">Квадрат суммы</div><div class="formula-math">(a + b)² = a² + 2ab + b²</div></div>
+                    <div class="formula-card show" data-class="all" onclick="insFormula('(a - b)^2 = a^2 - 2*a*b + b^2')"><div class="formula-title">Квадрат разности</div><div class="formula-math">(a - b)² = a² - 2ab + b²</div></div>
+                    <div class="formula-card show" data-class="all" onclick="insFormula('a^2 - b^2 = (a - b)*(a + b)')"><div class="formula-title">Разность квадратов</div><div class="formula-math">a² - b² = (a - b)(a + b)</div></div>
+                    <div class="formula-card show" data-class="all" onclick="insFormula('(a + b)^3 = a^3 + 3*a^2*b + 3*a*b^2 + b^3')"><div class="formula-title">Куб суммы</div><div class="formula-math">(a + b)³ = a³ + 3a²b + 3ab² + b³</div></div>
+                    <div class="formula-card show" data-class="all" onclick="insFormula('(a - b)^3 = a^3 - 3*a^2*b + 3*a*b^2 - b^3')"><div class="formula-title">Куб разности</div><div class="formula-math">(a - b)³ = a³ - 3a²b + 3ab² - b³</div></div>
+                    <div class="formula-card show" data-class="all" onclick="insFormula('a^3 + b^3 = (a + b)*(a^2 - a*b + b^2)')"><div class="formula-title">Сумма кубов</div><div class="formula-math">a³ + b³ = (a + b)(a² - ab + b²)</div></div>
+                    <div class="formula-card show" data-class="all" onclick="insFormula('a^3 - b^3 = (a - b)*(a^2 + a*b + b^2)')"><div class="formula-title">Разность кубов</div><div class="formula-math">a³ - b³ = (a - b)(a² + ab + b²)</div></div>
                 </div>
             </div>
         </div>
@@ -338,9 +352,23 @@
             document.querySelectorAll('.cheat-tabs button').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
             document.querySelectorAll('.cheat-section').forEach(sec => sec.style.display = 'none');
-            document.getElementById('tab-' + tabId).style.display = (tabId === 'physics') ? 'contents' : 'block';
-            renderFilters();
-            filterByClass('all');
+            
+            const section = document.getElementById('tab-' + tabId);
+            // Если это физика или ФСУ, используем "contents", иначе "block"
+            if (tabId === 'physics') section.style.display = 'contents';
+            else section.style.display = 'block';
+
+            // Показываем/скрываем фильтры по классам (для ФСУ они не нужны)
+            const filters = document.getElementById('cheatFilters');
+            if (tabId === 'fsu') {
+                filters.style.display = 'none';
+                // Принудительно показываем все карточки ФСУ
+                section.querySelectorAll('.formula-card').forEach(c => c.classList.add('show'));
+            } else {
+                filters.style.display = 'flex';
+                renderFilters();
+                filterByClass('all');
+            }
         }
 
         // ================= НАСТРОЙКИ =================
@@ -419,7 +447,7 @@
             }
             const activeTab = document.querySelector('.cheat-section[style*="contents"], .cheat-section[style*="block"]').id.replace('tab-', '');
             document.querySelectorAll('#tab-' + activeTab + ' .formula-card').forEach(card => {
-                if (className === 'all' || card.getAttribute('data-class') === className) card.classList.add('show');
+                if (className === 'all' || card.getAttribute('data-class') === className || card.getAttribute('data-class') === 'all') card.classList.add('show');
                 else card.classList.remove('show');
             });
         }
