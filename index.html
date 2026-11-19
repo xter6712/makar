@@ -154,9 +154,11 @@
             display: none; flex-direction: column; gap: 8px; cursor: default;
         }
         .rule-card.show { display: flex; }
-        .rule-title { font-size: 14px; color: #6af; font-weight: bold; }
-        .rule-text { font-size: 13px; color: #ccc; line-height: 1.5; }
+        .rule-title { font-size: 15px; color: #6af; font-weight: bold; margin-bottom: 5px;}
+        .rule-text { font-size: 13px; color: #ccc; line-height: 1.6; }
         .rule-text b { color: #fff; }
+        .rule-text ol, .rule-text ul { margin: 5px 0 10px 20px; padding: 0; }
+        .rule-text li { margin-bottom: 4px; }
 
         /* Красивые дроби */
         .frac {
@@ -169,7 +171,8 @@
         .frac-num { border-bottom: 1px solid #eee; padding: 0 2px; line-height: 1.1; }
         .frac-den { padding: 0 2px; line-height: 1.1; }
         
-        .step-box { background: #111; padding: 8px; border-radius: 6px; margin-top: 5px; border-left: 3px solid #37c; }
+        .step-box { background: #111; padding: 10px; border-radius: 6px; margin-top: 10px; border-left: 3px solid #37c; font-family: monospace; font-size: 14px; overflow-x: auto;}
+        .step-line { margin-bottom: 4px; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -310,7 +313,7 @@
                 <button id="btn-geometry" onclick="switchCheatTab('geometry')">📏 Геометрия</button>
             </div>
 
-            <!-- Под-вкладки (показываются только для Алгебры) -->
+            <!-- Под-вкладки Алгебры -->
             <div class="cheat-tabs" id="sub-tabs-algebra" style="display: none; border-bottom: none; padding-bottom: 0;">
                 <button class="sub-tab active" id="btn-alg-main" onclick="switchAlgSub('main')">Формулы</button>
                 <button class="sub-tab" id="btn-alg-fsu" onclick="switchAlgSub('fsu')">🔥 ФСУ</button>
@@ -340,74 +343,150 @@
                     <div class="formula-card show" data-class="all" onclick="insFormula('(a + b)^2 = a^2 + 2*a*b + b^2')"><div class="formula-title">Квадрат суммы</div><div class="formula-math">(a + b)² = a² + 2ab + b²</div></div>
                     <div class="formula-card show" data-class="all" onclick="insFormula('(a - b)^2 = a^2 - 2*a*b + b^2')"><div class="formula-title">Квадрат разности</div><div class="formula-math">(a - b)² = a² - 2ab + b²</div></div>
                     <div class="formula-card show" data-class="all" onclick="insFormula('a^2 - b^2 = (a - b)*(a + b)')"><div class="formula-title">Разность квадратов</div><div class="formula-math">a² - b² = (a - b)(a + b)</div></div>
+                    <div class="formula-card show" data-class="all" onclick="insFormula('(a + b)^3 = a^3 + 3*a^2*b + 3*a*b^2 + b^3')"><div class="formula-title">Куб суммы</div><div class="formula-math">(a + b)³ = a³ + 3a²b + 3ab² + b³</div></div>
                 </div>
 
-                <!-- ==================== АЛГЕБРА (ПРАВИЛА С ПРИМЕРАМИ И ДРОБЯМИ) ==================== -->
+                <!-- ==================== АЛГЕБРА (ПРАВИЛА) ==================== -->
                 <div id="tab-rules" class="cheat-section" style="display: none;">
                     
-                    <div class="rule-card show" data-class="all">
-                        <div class="rule-title">🍕 Сложение дробей</div>
+                    <div class="rule-card show">
+                        <div class="rule-title">🍕 Сложение и вычитание дробей</div>
                         <div class="rule-text">
-                            Нужно привести к <b>общему знаменателю</b>, затем сложить только верхние числа (числители).
-                        </div>
-                        <div class="step-box" style="text-align: center; font-size: 18px; font-family: monospace;">
-                            <span class="frac"><span class="frac-num">1</span><span class="frac-den">2</span></span> + 
-                            <span class="frac"><span class="frac-num">1</span><span class="frac-den">3</span></span> = 
-                            <span class="frac"><span class="frac-num">3</span><span class="frac-den">6</span></span> + 
-                            <span class="frac"><span class="frac-num">2</span><span class="frac-den">6</span></span> = 
-                            <span class="frac"><span class="frac-num">5</span><span class="frac-den">6</span></span>
+                            <ol>
+                                <li>Найди <b>общий знаменатель</b> (одинаковое число внизу).</li>
+                                <li>Найди <b>дополнительные множители</b> (общий разделить на старый).</li>
+                                <li>Умножь числитель и знаменатель на этот множитель.</li>
+                                <li>Сложи или вычти только <b>числители</b> (числа сверху).</li>
+                            </ol>
+                            <div class="step-box" style="text-align: center; font-size: 18px;">
+                                <span class="frac"><span class="frac-num">1</span><span class="frac-den">2</span></span> + 
+                                <span class="frac"><span class="frac-num">1</span><span class="frac-den">3</span></span> = 
+                                <span class="frac"><span class="frac-num">3</span><span class="frac-den">6</span></span> + 
+                                <span class="frac"><span class="frac-num">2</span><span class="frac-den">6</span></span> = 
+                                <span class="frac"><span class="frac-num">5</span><span class="frac-den">6</span></span>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="rule-card show" data-class="all">
+                    <div class="rule-card show">
+                        <div class="rule-title">✖️ Умножение дробей</div>
+                        <div class="rule-text">
+                            <ol>
+                                <li>Умножаем числитель на числитель.</li>
+                                <li>Умножаем знаменатель на знаменатель.</li>
+                                <li><b>Сокращаем</b> результат (делим верх и низ на одно число).</li>
+                            </ol>
+                            <div class="step-box" style="text-align: center; font-size: 18px;">
+                                <span class="frac"><span class="frac-num">2</span><span class="frac-den">5</span></span> × 
+                                <span class="frac"><span class="frac-num">3</span><span class="frac-den">4</span></span> = 
+                                <span class="frac"><span class="frac-num">6</span><span class="frac-den">20</span></span> = 
+                                <span class="frac"><span class="frac-num">3</span><span class="frac-den">10</span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rule-card show">
                         <div class="rule-title">➗ Деление дробей</div>
                         <div class="rule-text">
-                            <b>Переворачиваем</b> вторую дробь и меняем знак на умножение.
-                        </div>
-                        <div class="step-box" style="text-align: center; font-size: 18px; font-family: monospace;">
-                            <span class="frac"><span class="frac-num">1</span><span class="frac-den">2</span></span> ÷ 
-                            <span class="frac"><span class="frac-num">3</span><span class="frac-den">4</span></span> = 
-                            <span class="frac"><span class="frac-num">1</span><span class="frac-den">2</span></span> × 
-                            <span class="frac"><span class="frac-num">4</span><span class="frac-den">3</span></span> = 
-                            <span class="frac"><span class="frac-num">4</span><span class="frac-den">6</span></span> = 
-                            <span class="frac"><span class="frac-num">2</span><span class="frac-den">3</span></span>
+                            <ol>
+                                <li><b>Переворачиваем</b> вторую дробь (меняем верх и низ местами).</li>
+                                <li>Заменяем знак деления на <b>умножение</b>.</li>
+                                <li>Умножаем и сокращаем.</li>
+                            </ol>
+                            <div class="step-box" style="text-align: center; font-size: 18px;">
+                                <span class="frac"><span class="frac-num">1</span><span class="frac-den">2</span></span> ÷ 
+                                <span class="frac"><span class="frac-num">3</span><span class="frac-den">4</span></span> = 
+                                <span class="frac"><span class="frac-num">1</span><span class="frac-den">2</span></span> × 
+                                <span class="frac"><span class="frac-num">4</span><span class="frac-den">3</span></span> = 
+                                <span class="frac"><span class="frac-num">4</span><span class="frac-den">6</span></span> = 
+                                <span class="frac"><span class="frac-num">2</span><span class="frac-den">3</span></span>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="rule-card show" data-class="all">
-                        <div class="rule-title">⚖️ Пропорция (Крест-накрест)</div>
+                    <div class="rule-card show">
+                        <div class="rule-title">⚖️ Пропорции (уравнения с дробями)</div>
                         <div class="rule-text">
-                            Произведение крайних членов равно произведению средних.
-                        </div>
-                        <div class="step-box" style="text-align: center; font-size: 18px; font-family: monospace;">
-                            <span class="frac"><span class="frac-num">x</span><span class="frac-den">4</span></span> = 
-                            <span class="frac"><span class="frac-num">3</span><span class="frac-den">6</span></span> 
-                            <span style="margin: 0 10px;">→</span> 6x = 12 
-                            <span style="margin: 0 10px;">→</span> x = 2
+                            Используем правило <b>«Крест-накрест»</b>: произведение крайних равно произведению средних.
+                            <div class="step-box" style="text-align: center; font-size: 18px;">
+                                <span class="frac"><span class="frac-num">x</span><span class="frac-den">4</span></span> = 
+                                <span class="frac"><span class="frac-num">3</span><span class="frac-den">6</span></span> 
+                                <div style="margin: 10px 0; color: #37c;">↓ крест-накрест ↓</div>
+                                x × 6 = 4 × 3<br>
+                                6x = 12<br>
+                                x = 2
+                            </div>
                         </div>
                     </div>
 
-                    <div class="rule-card show" data-class="all">
-                        <div class="rule-title">🔍 Решение уравнений</div>
+                    <div class="rule-card show">
+                        <div class="rule-title">🔍 Как решать линейные уравнения</div>
                         <div class="rule-text">
-                            Переносим числа с <b>x</b> влево, числа без <b>x</b> вправо. При переносе <b>знак меняется!</b>
-                        </div>
-                        <div class="step-box" style="text-align: center; font-size: 16px; font-family: monospace;">
-                            2x + 5 = 11 <br>
-                            2x = 11 - 5 <br>
-                            2x = 6 <br>
-                            x = 3
+                            <ol>
+                                <li>Раскрой скобки (если есть).</li>
+                                <li>Все числа с <b>x</b> перенеси в левую часть, числа без <b>x</b> — в правую.</li>
+                                <li><b>ВАЖНО:</b> при переносе через знак «=» знак числа <b>меняется на противоположный!</b></li>
+                                <li>Приведи подобные слагаемые.</li>
+                                <li>Раздели обе части на число перед x.</li>
+                            </ol>
+                            <div class="step-box">
+                                <div class="step-line">2x + 5 = 11</div>
+                                <div class="step-line">2x = 11 - 5 <span style="color:#888">(переносим 5, меняем знак)</span></div>
+                                <div class="step-line">2x = 6</div>
+                                <div class="step-line">x = 6 / 2</div>
+                                <div class="step-line" style="color:#37c; font-weight:bold;">x = 3</div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="rule-card show" data-class="all">
+                    <div class="rule-card show">
                         <div class="rule-title">📉 Раскрытие скобок</div>
                         <div class="rule-text">
-                            Если перед скобкой стоит <b>минус</b>, все знаки внутри меняются на противоположные.
+                            Если перед скобкой стоит <b>минус</b>, все знаки внутри меняются на противоположные.<br><br>
+                            <b>Плюс:</b> знаки сохраняются.<br>
+                            a + (b - c) = a + b - c<br><br>
+                            <b>Минус:</b> знаки меняются.<br>
+                            a - (b + c) = a - b - c
                         </div>
-                        <div class="step-box" style="text-align: center; font-size: 16px; font-family: monospace;">
-                            a - (b + c) = a - b - c <br>
-                            a - (b - c) = a - b + c
+                    </div>
+
+                    <div class="rule-card show">
+                        <div class="rule-title">🔢 Умножение скобки на число</div>
+                        <div class="rule-text">
+                            Умножаем число на <b>каждое</b> слагаемое внутри скобки.
+                            <div class="step-box">
+                                3 × (x + 4) = 3×x + 3×4 = 3x + 12<br>
+                                5 × (2x - 3) = 5×2x - 5×3 = 10x - 15
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rule-card show">
+                        <div class="rule-title">📊 Решение квадратных уравнений (через D)</div>
+                        <div class="rule-text">
+                            <ol>
+                                <li>Приведи уравнение к виду ax² + bx + c = 0.</li>
+                                <li>Найди дискриминант: <b>D = b² - 4ac</b>.</li>
+                                <li>Если D > 0: два корня. Если D = 0: один. Если D < 0: нет корней.</li>
+                                <li>Корни ищем по формуле: x = (-b ± √D) / 2a.</li>
+                            </ol>
+                            <div class="step-box">
+                                x² - 5x + 6 = 0<br>
+                                a=1, b=-5, c=6<br>
+                                D = (-5)² - 4×1×6 = 25 - 24 = 1<br>
+                                x₁ = (5 + 1)/2 = 3<br>
+                                x₂ = (5 - 1)/2 = 2
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rule-card show">
+                        <div class="rule-title">🧮 Степени и корни</div>
+                        <div class="rule-text">
+                            <b>Умножение:</b> a² × a³ = a⁵ (показатели складываются).<br>
+                            <b>Деление:</b> a⁵ / a² = a³ (показатели вычитаются).<br>
+                            <b>Степень степени:</b> (a²)³ = a⁶ (показатели умножаются).<br>
+                            <b>Корень:</b> √a × √b = √(ab).
                         </div>
                     </div>
                 </div>
