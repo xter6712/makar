@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Разрешаем масштабирование (убираем user-scalable=no) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <meta name="theme-color" content="#0d0d12">
-    <!-- Красивая иконка для приложения (встроена прямо в код) -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧮</text></svg>">
     <title>Умный решатель</title>
     <style>
@@ -27,6 +27,9 @@
             background-attachment: fixed;
             background-repeat: no-repeat;
             transition: background-image 0.3s ease;
+            /* Плавный зум */
+            transition: transform 0.2s ease-out;
+            transform-origin: top center;
         }
 
         body::before {
@@ -83,7 +86,7 @@
         .icon-btn:active { transform: scale(0.9); }
 
         #geoInput {
-            width: 100%; min-height: 80px; padding: 12px; font-size: 16px; /* Больше шрифт для мобилки */
+            width: 100%; min-height: 80px; padding: 12px; font-size: 16px;
             border-radius: 6px; border: 1px solid #333; background: #111; color: #eee;
             resize: vertical; font-family: inherit;
         }
@@ -227,6 +230,18 @@
     <div class="modal" id="settingsModal">
         <div class="modal-box">
             <h3>⚙️ Настройки <span class="close" onclick="closeSettings()">✕</span></h3>
+            
+            <!-- НОВАЯ НАСТРОЙКА МАСШТАБА -->
+            <div class="setting-group">
+                <label>🔍 Масштаб интерфейса</label>
+                <input type="range" id="zoomRange" min="80" max="150" value="100" step="5" style="width: 100%; margin-bottom: 5px;">
+                <div style="display: flex; justify-content: space-between; font-size: 12px; color: #666;">
+                    <span>Маленький</span>
+                    <span id="zoomValue">100%</span>
+                    <span>Большой</span>
+                </div>
+            </div>
+
             <div class="setting-group">
                 <label>🖼️ Обои фона</label>
                 <button id="changeBgBtn">Выбрать картинку</button>
@@ -290,7 +305,7 @@
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
     <script>
-        // НАСТРОЙКИ
+        // НАСТРОЙКИ И ЗУМ
         const settingsModal = document.getElementById('settingsModal');
         const cheatsheetModal = document.getElementById('cheatsheetModal');
         const bgInput = document.getElementById('bgInput');
@@ -301,6 +316,20 @@
         const geoAI = document.getElementById('geoAI');
         const geoInput = document.getElementById('geoInput');
         const cheatFilters = document.getElementById('cheatFilters');
+        
+        const zoomRange = document.getElementById('zoomRange');
+        const zoomValue = document.getElementById('zoomValue');
+
+        // Применение масштаба
+        function applyZoom(percent) {
+            document.body.style.zoom = percent + '%';
+            zoomValue.textContent = percent + '%';
+            localStorage.setItem('custom_zoom', percent);
+        }
+
+        zoomRange.oninput = (e) => {
+            applyZoom(e.target.value);
+        };
 
         function updateOverlay(opacityPercent) {
             const alpha = opacityPercent / 100;
@@ -313,9 +342,16 @@
             const savedBg = localStorage.getItem('custom_background');
             const savedOpacity = localStorage.getItem('custom_opacity');
             const savedKey = localStorage.getItem('openrouter_key');
+            const savedZoom = localStorage.getItem('custom_zoom');
+            
             if (savedBg) { document.body.style.backgroundImage = `url('${savedBg}')`; opacityWrapper.style.display = 'block'; }
             if (savedOpacity !== null) opacityRange.value = savedOpacity;
             if (savedKey) { apiKeyInput.value = savedKey; geoAI.disabled = false; }
+            if (savedZoom !== null) {
+                zoomRange.value = savedZoom;
+                applyZoom(savedZoom);
+            }
+            
             updateOverlay(opacityRange.value);
         }
         initSettings();
@@ -337,6 +373,7 @@
             reader.readAsDataURL(file); bgInput.value = '';
         };
         opacityRange.oninput = (e) => updateOverlay(e.target.value);
+        
         window.saveAllSettings = () => {
             localStorage.setItem('custom_opacity', opacityRange.value);
             updateOverlay(opacityRange.value);
@@ -395,8 +432,6 @@
 
         // КАЛЬКУЛЯТОР
         const display = document.getElementById('display');
-        const historyList = document.getElementById('historyList');
-        let history = [];
         function formatNumber(n) { if (!Number.isFinite(n)) return '☹️'; const [int, frac] = String(n).split('.'); return int.replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + (frac ? '.'+frac : ''); }
         function normalize(str) { return str.replace(/\s/g, ''); }
         function append(ch) { if (display.value === '☹️') display.value = '0'; const cur = normalize(display.value); display.value = cur === '0' && !'.+-*/%^'.includes(ch) ? ch : cur + ch; }
