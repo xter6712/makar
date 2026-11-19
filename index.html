@@ -158,6 +158,19 @@
         .rule-text { font-size: 13px; color: #ccc; line-height: 1.5; }
         .rule-text b { color: #fff; }
 
+        /* Красивые дроби */
+        .frac {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            vertical-align: middle;
+            margin: 0 4px;
+        }
+        .frac-num { border-bottom: 1px solid #eee; padding: 0 2px; line-height: 1.1; }
+        .frac-den { padding: 0 2px; line-height: 1.1; }
+        
+        .step-box { background: #111; padding: 8px; border-radius: 6px; margin-top: 5px; border-left: 3px solid #37c; }
+
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -312,8 +325,6 @@
                 <div id="tab-physics" class="cheat-section active" style="display: contents;">
                     <div class="formula-card show" data-class="7" onclick="insFormula('v = S / t')"><div class="formula-title">7 кл · Скорость</div><div class="formula-math">v = S / t</div></div>
                     <div class="formula-card show" data-class="7" onclick="insFormula('p = m / V')"><div class="formula-title">7 кл · Плотность</div><div class="formula-math">ρ = m / V</div></div>
-                    <div class="formula-card show" data-class="7" onclick="insFormula('F = m * g')"><div class="formula-title">7 кл · Сила тяжести</div><div class="formula-math">F = m · g</div></div>
-                    <div class="formula-card show" data-class="8" onclick="insFormula('Q = c * m * (t2 - t1)')"><div class="formula-title">8 кл · Теплота</div><div class="formula-math">Q = c·m·Δt</div></div>
                     <div class="formula-card show" data-class="8" onclick="insFormula('I = U / R')"><div class="formula-title">8 кл · Закон Ома</div><div class="formula-math">I = U / R</div></div>
                     <div class="formula-card show" data-class="9" onclick="insFormula('F = m * a')"><div class="formula-title">9 кл · 2-й з. Ньютона</div><div class="formula-math">F = m · a</div></div>
                 </div>
@@ -322,8 +333,6 @@
                 <div id="tab-algebra" class="cheat-section" style="display: none;">
                     <div class="formula-card show" data-class="7" onclick="insFormula('y = k * x + b')"><div class="formula-title">7 кл · Линейная функция</div><div class="formula-math">y = kx + b</div></div>
                     <div class="formula-card show" data-class="8" onclick="insFormula('D = b^2 - 4*a*c')"><div class="formula-title">8 кл · Дискриминант</div><div class="formula-math">D = b² - 4ac</div></div>
-                    <div class="formula-card show" data-class="8" onclick="insFormula('(-b + sqrt(D)) / (2*a)')"><div class="formula-title">8 кл · Корень x₁</div><div class="formula-math">x₁ = (-b+√D)/2a</div></div>
-                    <div class="formula-card show" data-class="9" onclick="insFormula('a_n = a_1 + d*(n-1)')"><div class="formula-title">9 кл · Прогрессия</div><div class="formula-math">aₙ = a₁+d(n-1)</div></div>
                 </div>
 
                 <!-- ==================== АЛГЕБРА (ФСУ) ==================== -->
@@ -331,69 +340,74 @@
                     <div class="formula-card show" data-class="all" onclick="insFormula('(a + b)^2 = a^2 + 2*a*b + b^2')"><div class="formula-title">Квадрат суммы</div><div class="formula-math">(a + b)² = a² + 2ab + b²</div></div>
                     <div class="formula-card show" data-class="all" onclick="insFormula('(a - b)^2 = a^2 - 2*a*b + b^2')"><div class="formula-title">Квадрат разности</div><div class="formula-math">(a - b)² = a² - 2ab + b²</div></div>
                     <div class="formula-card show" data-class="all" onclick="insFormula('a^2 - b^2 = (a - b)*(a + b)')"><div class="formula-title">Разность квадратов</div><div class="formula-math">a² - b² = (a - b)(a + b)</div></div>
-                    <div class="formula-card show" data-class="all" onclick="insFormula('(a + b)^3 = a^3 + 3*a^2*b + 3*a*b^2 + b^3')"><div class="formula-title">Куб суммы</div><div class="formula-math">(a + b)³ = a³ + 3a²b + 3ab² + b³</div></div>
-                    <div class="formula-card show" data-class="all" onclick="insFormula('(a - b)^3 = a^3 - 3*a^2*b + 3*a*b^2 - b^3')"><div class="formula-title">Куб разности</div><div class="formula-math">(a - b)³ = a³ - 3a²b + 3ab² - b³</div></div>
-                    <div class="formula-card show" data-class="all" onclick="insFormula('a^3 + b^3 = (a + b)*(a^2 - a*b + b^2)')"><div class="formula-title">Сумма кубов</div><div class="formula-math">a³ + b³ = (a + b)(a² - ab + b²)</div></div>
-                    <div class="formula-card show" data-class="all" onclick="insFormula('a^3 - b^3 = (a - b)*(a^2 + a*b + b^2)')"><div class="formula-title">Разность кубов</div><div class="formula-math">a³ - b³ = (a - b)(a² + ab + b²)</div></div>
                 </div>
 
-                <!-- ==================== АЛГЕБРА (ПРАВИЛА) ==================== -->
+                <!-- ==================== АЛГЕБРА (ПРАВИЛА С ПРИМЕРАМИ И ДРОБЯМИ) ==================== -->
                 <div id="tab-rules" class="cheat-section" style="display: none;">
                     
                     <div class="rule-card show" data-class="all">
-                        <div class="rule-title">🍕 Сложение и вычитание дробей</div>
+                        <div class="rule-title">🍕 Сложение дробей</div>
                         <div class="rule-text">
-                            1. Найди <b>Общий знаменатель</b> (одинаковое число внизу).<br>
-                            2. Найди <b>Дополнительные множители</b> (общий разделить на старый).<br>
-                            3. Умножь числитель и знаменатель на этот множитель.<br>
-                            4. Сложи или вычти только <b>числители</b> (числа сверху).<br>
-                            <i>Пример: 1/2 + 1/3 = 3/6 + 2/6 = 5/6</i>
+                            Нужно привести к <b>общему знаменателю</b>, затем сложить только верхние числа (числители).
                         </div>
-                    </div>
-
-                    <div class="rule-card show" data-class="all">
-                        <div class="rule-title">✖️ Умножение дробей</div>
-                        <div class="rule-text">
-                            Просто умножаем числитель на числитель, а знаменатель на знаменатель.<br>
-                            <b>Сократи</b> результат, если это возможно!<br>
-                            <i>Пример: 2/5 × 3/4 = 6/20 = 3/10</i>
+                        <div class="step-box" style="text-align: center; font-size: 18px; font-family: monospace;">
+                            <span class="frac"><span class="frac-num">1</span><span class="frac-den">2</span></span> + 
+                            <span class="frac"><span class="frac-num">1</span><span class="frac-den">3</span></span> = 
+                            <span class="frac"><span class="frac-num">3</span><span class="frac-den">6</span></span> + 
+                            <span class="frac"><span class="frac-num">2</span><span class="frac-den">6</span></span> = 
+                            <span class="frac"><span class="frac-num">5</span><span class="frac-den">6</span></span>
                         </div>
                     </div>
 
                     <div class="rule-card show" data-class="all">
                         <div class="rule-title">➗ Деление дробей</div>
                         <div class="rule-text">
-                            <b>Переверни</b> вторую дробь и замени знак деления на умножение!<br>
-                            <i>Пример: 1/2 ÷ 3/4 = 1/2 × 4/3 = 4/6 = 2/3</i>
+                            <b>Переворачиваем</b> вторую дробь и меняем знак на умножение.
+                        </div>
+                        <div class="step-box" style="text-align: center; font-size: 18px; font-family: monospace;">
+                            <span class="frac"><span class="frac-num">1</span><span class="frac-den">2</span></span> ÷ 
+                            <span class="frac"><span class="frac-num">3</span><span class="frac-den">4</span></span> = 
+                            <span class="frac"><span class="frac-num">1</span><span class="frac-den">2</span></span> × 
+                            <span class="frac"><span class="frac-num">4</span><span class="frac-den">3</span></span> = 
+                            <span class="frac"><span class="frac-num">4</span><span class="frac-den">6</span></span> = 
+                            <span class="frac"><span class="frac-num">2</span><span class="frac-den">3</span></span>
                         </div>
                     </div>
 
                     <div class="rule-card show" data-class="all">
-                        <div class="rule-title">⚖️ Решение пропорций (уравнений)</div>
+                        <div class="rule-title">⚖️ Пропорция (Крест-накрест)</div>
                         <div class="rule-text">
-                            Правило <b>«Крест-накрест»</b>.<br>
-                            Если a / b = c / d, то <b>a × d = b × c</b>.<br>
-                            <i>Пример: x / 4 = 3 / 6  →  x × 6 = 4 × 3  →  6x = 12  →  x = 2</i>
+                            Произведение крайних членов равно произведению средних.
+                        </div>
+                        <div class="step-box" style="text-align: center; font-size: 18px; font-family: monospace;">
+                            <span class="frac"><span class="frac-num">x</span><span class="frac-den">4</span></span> = 
+                            <span class="frac"><span class="frac-num">3</span><span class="frac-den">6</span></span> 
+                            <span style="margin: 0 10px;">→</span> 6x = 12 
+                            <span style="margin: 0 10px;">→</span> x = 2
                         </div>
                     </div>
 
                     <div class="rule-card show" data-class="all">
-                        <div class="rule-title">🔍 Как найти x (перенос слагаемых)</div>
+                        <div class="rule-title">🔍 Решение уравнений</div>
                         <div class="rule-text">
-                            1. Все числа с <b>x</b> переносим в одну сторону, обычные числа — в другую.<br>
-                            2. При переносе через знак <b>=</b>, знак числа <b>меняется на противоположный!</b><br>
-                            3. Приводим подобные слагаемые.<br>
-                            4. Делим всё уравнение на число перед x.<br>
-                            <i>Пример: 2x + 5 = 11  →  2x = 11 - 5  →  2x = 6  →  x = 3</i>
+                            Переносим числа с <b>x</b> влево, числа без <b>x</b> вправо. При переносе <b>знак меняется!</b>
+                        </div>
+                        <div class="step-box" style="text-align: center; font-size: 16px; font-family: monospace;">
+                            2x + 5 = 11 <br>
+                            2x = 11 - 5 <br>
+                            2x = 6 <br>
+                            x = 3
                         </div>
                     </div>
 
                     <div class="rule-card show" data-class="all">
                         <div class="rule-title">📉 Раскрытие скобок</div>
                         <div class="rule-text">
-                            Если перед скобками стоит знак <b>минус</b>, то при раскрытии знаки внутри скобок меняются на противоположные.<br>
-                            <i>Пример: a - (b + c) = a - b - c</i><br>
-                            <i>Пример: a - (b - c) = a - b + c</i>
+                            Если перед скобкой стоит <b>минус</b>, все знаки внутри меняются на противоположные.
+                        </div>
+                        <div class="step-box" style="text-align: center; font-size: 16px; font-family: monospace;">
+                            a - (b + c) = a - b - c <br>
+                            a - (b - c) = a - b + c
                         </div>
                     </div>
                 </div>
@@ -401,7 +415,6 @@
                 <!-- ==================== ГЕОМЕТРИЯ ==================== -->
                 <div id="tab-geometry" class="cheat-section" style="display: none;">
                     <div class="formula-card show" data-class="7" onclick="insFormula('S = 0.5 * a * h')"><div class="formula-title">7 кл · Площадь Δ</div><div class="formula-math">S = 0.5·a·h</div></div>
-                    <div class="formula-card show" data-class="7" onclick="insFormula('Сумма углов = 180')"><div class="formula-title">7 кл · Сумма углов Δ</div><div class="formula-math">∠A+∠B+∠C = 180°</div></div>
                     <div class="formula-card show" data-class="8" onclick="insFormula('c^2 = a^2 + b^2')"><div class="formula-title">8 кл · Пифагор</div><div class="formula-math">c² = a² + b²</div></div>
                     <div class="formula-card show" data-class="9" onclick="insFormula('S = pi * r^2')"><div class="formula-title">9 кл · Площадь круга</div><div class="formula-math">S = π·r²</div></div>
                 </div>
@@ -418,7 +431,6 @@
             document.getElementById('tab-' + tabId).classList.add('active');
         }
 
-        // Управление шпаргалкой
         function switchCheatTab(tabId) {
             document.querySelectorAll('.cheat-tabs > button').forEach(btn => btn.classList.remove('active'));
             document.getElementById('btn-' + tabId).classList.add('active');
@@ -433,7 +445,7 @@
                 filterByClass('all');
             } else if (tabId === 'algebra') {
                 document.getElementById('sub-tabs-algebra').style.display = 'flex';
-                switchAlgSub('main'); // По умолчанию открываем формулы
+                switchAlgSub('main');
             } else if (tabId === 'geometry') {
                 document.getElementById('tab-geometry').style.display = 'block';
                 document.getElementById('sub-tabs-algebra').style.display = 'none';
@@ -443,12 +455,10 @@
             }
         }
 
-        // Управление под-вкладками Алгебры
         function switchAlgSub(subId) {
             document.querySelectorAll('.sub-tab').forEach(btn => btn.classList.remove('active'));
             document.getElementById('btn-alg-' + subId).classList.add('active');
 
-            // Скрываем все разделы алгебры
             document.getElementById('tab-algebra').style.display = 'none';
             document.getElementById('tab-fsu').style.display = 'none';
             document.getElementById('tab-rules').style.display = 'none';
@@ -464,8 +474,7 @@
                 document.querySelectorAll('#tab-fsu .formula-card').forEach(c => c.classList.add('show'));
             } else if (subId === 'rules') {
                 document.getElementById('tab-rules').style.display = 'block';
-                document.getElementById('cheatFilters').style.display = 'none'; // Скрываем фильтры классов
-                // Показываем все карточки правил
+                document.getElementById('cheatFilters').style.display = 'none'; 
                 document.querySelectorAll('#tab-rules .rule-card').forEach(c => c.classList.add('show'));
             }
         }
@@ -600,10 +609,6 @@
                     const U = nums[0], R = nums[1];
                     return resBox.innerHTML = `📝 ДАНО:\nU = ${U} В\nR = ${R} Ом\n\n📐 РЕШЕНИЕ:\nI = U / R = ${U} / ${R} = ${fmt(U/R)} А\n\n✅ ОТВЕТ: ${fmt(U/R)} А`;
                 }
-                if (hasAny('скорость', 'v=') && hasAny('путь', 'расстояние', 's=') && hasAny('время', 't=') && nums.length >= 2) {
-                    const S = nums[0], T = nums[1];
-                    return resBox.innerHTML = `📝 ДАНО:\nS = ${S} м\nt = ${T} с\n\n📐 РЕШЕНИЕ:\nv = S / t = ${S} / ${T} = ${fmt(S/T)} м/с\n\n✅ ОТВЕТ: ${fmt(S/T)} м/с`;
-                }
                 if (hasAny('уравнени', 'реши') && hasAny('x²', 'x^2') && nums.length >= 3) {
                     const a = nums[0], b = nums[1], c = nums[2]; const D = b*b - 4*a*c;
                     let r = `📝 Уравнение: ${a}x² + ${b}x + ${c} = 0\nD = ${b}² - 4·${a}·${c} = ${fmt(D)}\n`;
@@ -613,26 +618,6 @@
                 }
                 throw new Error('Локальный решатель не понял. Нажми «🤖 Спросить ИИ»!');
             } catch (err) { resBox.innerHTML = '☹️ ' + err.message; }
-        }
-
-        // ================= OCR ФОТО =================
-        async function handlePhoto(input) {
-            const file = input.files[0]; if (!file) return;
-            const resBox = document.getElementById('mathResult');
-            resBox.style.display = 'block';
-            resBox.innerHTML = '⏳ Распознаю текст с фото...';
-            try {
-                if (!window.ocrWorker) {
-                    window.ocrWorker = await Tesseract.createWorker('rus+eng', 1, {
-                        logger: m => { if (m.status === 'recognizing text') resBox.innerHTML = `⏳ Распознаю… ${Math.round(m.progress * 100)}%`; },
-                        tessedit_char_whitelist: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя∠∆∟°π·+−=()[]{}.,:;/-'
-                    });
-                }
-                const { data: { text } } = await window.ocrWorker.recognize(file);
-                const cleaned = text.replace(/\|/g, '1').trim();
-                document.getElementById('mathInput').value = cleaned;
-                resBox.innerHTML = '✓ Текст распознан! Проверь и нажми "Решить".';
-            } catch (err) { resBox.innerHTML = '☹️ Ошибка OCR: ' + err.message; }
         }
 
         // ================= ИИ =================
@@ -649,7 +634,7 @@
 
             let sysPrompt = '';
             if (mode === 'math') {
-                sysPrompt = 'Ты — строгий учитель физики и математики. ОБЯЗАТЕЛЬНО оформляй решение по шаблону:\nДАНО:\n...\nСИ:\n...\nРЕШЕНИЕ:\n...\nОТВЕТ:\n...\n\nНЕ ИСПОЛЬЗУЙ LaTeX. Пиши обычным текстом, используя символы ×, ÷, ², ³, √, π, °.';
+                sysPrompt = 'Ты — строгий учитель физики и математики. ОБЯЗАТЕЛЬНО оформляй решение по шаблону:\nДАНО:\n...\nСИ:\n...\nРЕШЕНИЕ:\n...\nОТВЕТ:\n...\n\nНЕ ИСПОЛЬЗУЙ LaTeX. Пиши обычным текстом, используя символы ×, ÷, ², ³, √, π, °. Если в задаче есть дроби, пиши их в формате (числитель) / (знаменатель).';
             } else {
                 sysPrompt = 'Ты — репетитор по английскому. Переводи, проверяй ошибки, объясняй грамматику простыми словами. Отвечай на русском. Не используй сложное форматирование.';
             }
