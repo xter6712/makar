@@ -95,18 +95,6 @@
         .tag { background: #2b2b40; color: #ccc; border: none; padding: 8px 12px; border-radius: 20px; font-size: 13px; cursor: pointer; }
         .tag:active { background: #37c; color: #fff; }
 
-        /* ================= КАЛЬКУЛЯТОР ================= */
-        #calcDisplay {
-            width: 100%; font-size: 28px; padding: 10px; text-align: right;
-            margin-bottom: 10px; border: none; border-radius: 6px;
-            background: #111; color: #0f0; font-family: monospace;
-        }
-        .keys { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
-        .keys button { padding: 14px 0; font-size: 16px; border: none; border-radius: 6px; background: #444; color: #fff; font-weight: bold; }
-        .keys button:active { background: #555; }
-        .keys .op { background: #f80; color: #000; }
-        .keys .fn { background: #37c; }
-
         /* ================= МОДАЛКИ ================= */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.85); z-index: 100; justify-content: center; align-items: center; padding: 15px; }
         .modal.show { display: flex; }
@@ -158,7 +146,7 @@
         <!-- ================= ВКЛАДКА 1: МАТЕМАТИКА И ФИЗИКА ================= -->
         <div id="tab-math" class="tab-content active">
             <div class="card-header">
-                <span>Решатель (Алгебра, Физика)</span>
+                <span>Решатель</span>
                 <div style="display:flex; gap:15px;">
                     <button class="icon-btn" onclick="cheatsheetModal.classList.add('show')">📚</button>
                     <button class="icon-btn" onclick="settingsModal.classList.add('show')">⚙️</button>
@@ -168,11 +156,10 @@
             <div class="quick-tags">
                 <button class="tag" onclick="setPrompt('mathInput', 'Q = c * m * (t2 - t1)')">Теплота</button>
                 <button class="tag" onclick="setPrompt('mathInput', 'I = U / R')">Закон Ома</button>
-                <button class="tag" onclick="setPrompt('mathInput', 'реши уравнение 2x² - 5x + 2 = 0')">Квадратное ур-е</button>
+                <button class="tag" onclick="setPrompt('mathInput', 'F_A = p_ж * g * V')">Архимед</button>
             </div>
 
             <textarea id="mathInput" placeholder="Напиши задачу по физике, алгебре или геометрии..."></textarea>
-            <div id="ocrRaw" style="display:none; font-size:11px; color:#888; margin-top:5px;"></div>
             
             <div class="row" style="margin-bottom: 10px;">
                 <button class="btn-outline" style="flex:1; font-size:13px;" onclick="document.getElementById('photoInput').click()">📷 Загрузить фото</button>
@@ -206,39 +193,6 @@
                 <button class="btn-outline" onclick="clearBox('engInput', 'engResult')">Сброс</button>
             </div>
             <div id="engResult" class="result-box"></div>
-        </div>
-    </div>
-
-    <!-- ВСТРОЕННЫЙ КАЛЬКУЛЯТОР (ВСПЛЫВАЮЩИЙ) -->
-    <div class="modal" id="calcModal">
-        <div class="modal-box" style="max-width: 350px;">
-            <h3>🧮 Калькулятор <span class="close" onclick="calcModal.classList.remove('show')">✕</span></h3>
-            <input id="calcDisplay" readonly value="0">
-            <div class="keys">
-                <button class="fn" onclick="calcFn('sq')">x²</button>
-                <button class="fn" onclick="calcFn('sqrt')">√</button>
-                <button class="fn" onclick="calcIns('Math.PI')">π</button>
-                <button class="fn" onclick="calcClr()">C</button>
-                <button class="fn" onclick="calcDel()">⌫</button>
-                <button onclick="calcApp('7')">7</button>
-                <button onclick="calcApp('8')">8</button>
-                <button onclick="calcApp('9')">9</button>
-                <button class="op" onclick="calcApp('/')">/</button>
-                <button class="op" onclick="calcApp('*')">×</button>
-                <button onclick="calcApp('4')">4</button>
-                <button onclick="calcApp('5')">5</button>
-                <button onclick="calcApp('6')">6</button>
-                <button class="op" onclick="calcApp('-')">−</button>
-                <button class="op" onclick="calcApp('+')">+</button>
-                <button onclick="calcApp('1')">1</button>
-                <button onclick="calcApp('2')">2</button>
-                <button onclick="calcApp('3')">3</button>
-                <button onclick="calcApp('.')">.</button>
-                <button class="op" style="background:#37c;" onclick="calcEq()">=</button>
-                <button onclick="calcApp('0')" style="grid-column: span 2;">0</button>
-                <button onclick="calcIns('-')">±</button>
-                <button onclick="calcApp('%')">%</button>
-            </div>
         </div>
     </div>
 
@@ -281,26 +235,89 @@
             </div>
             <div class="cheat-filters" id="cheatFilters"></div>
             <div class="cheat-content" id="cheatContent">
+                
+                <!-- ==================== ФИЗИКА ==================== -->
                 <div id="tab-physics" class="cheat-section active" style="display: contents;">
+                    <!-- 7 КЛАСС -->
                     <div class="formula-card show" data-class="7" onclick="insFormula('v = S / t')"><div class="formula-title">7 кл · Скорость</div><div class="formula-math">v = S / t</div></div>
                     <div class="formula-card show" data-class="7" onclick="insFormula('p = m / V')"><div class="formula-title">7 кл · Плотность</div><div class="formula-math">ρ = m / V</div></div>
-                    <div class="formula-card show" data-class="8" onclick="insFormula('Q = c * m * (t2 - t1)')"><div class="formula-title">8 кл · Теплота</div><div class="formula-math">Q = c · m · Δt</div></div>
+                    <div class="formula-card show" data-class="7" onclick="insFormula('F = m * g')"><div class="formula-title">7 кл · Сила тяжести</div><div class="formula-math">F = m · g</div></div>
+                    <div class="formula-card show" data-class="7" onclick="insFormula('p = F / S')"><div class="formula-title">7 кл · Давление</div><div class="formula-math">p = F / S</div></div>
+                    <div class="formula-card show" data-class="7" onclick="insFormula('F_A = p_ж * g * V')"><div class="formula-title">7 кл · Сила Архимеда</div><div class="formula-math">F_A = ρ_ж·g·V</div></div>
+                    <div class="formula-card show" data-class="7" onclick="insFormula('A = F * S')"><div class="formula-title">7 кл · Работа</div><div class="formula-math">A = F · S</div></div>
+                    <div class="formula-card show" data-class="7" onclick="insFormula('N = A / t')"><div class="formula-title">7 кл · Мощность</div><div class="formula-math">N = A / t</div></div>
+                    <div class="formula-card show" data-class="7" onclick="insFormula('p_г = p * g * h')"><div class="formula-title">7 кл · Давл. жидкости</div><div class="formula-math">p = ρ·g·h</div></div>
+
+                    <!-- 8 КЛАСС -->
+                    <div class="formula-card show" data-class="8" onclick="insFormula('Q = c * m * (t2 - t1)')"><div class="formula-title">8 кл · Теплота</div><div class="formula-math">Q = c·m·Δt</div></div>
+                    <div class="formula-card show" data-class="8" onclick="insFormula('Q = q * m')"><div class="formula-title">8 кл · Сгорание топлива</div><div class="formula-math">Q = q·m</div></div>
                     <div class="formula-card show" data-class="8" onclick="insFormula('I = U / R')"><div class="formula-title">8 кл · Закон Ома</div><div class="formula-math">I = U / R</div></div>
+                    <div class="formula-card show" data-class="8" onclick="insFormula('P = I * U')"><div class="formula-title">8 кл · Мощность тока</div><div class="formula-math">P = I·U</div></div>
+                    <div class="formula-card show" data-class="8" onclick="insFormula('R = p * l / S')"><div class="formula-title">8 кл · Сопротивление</div><div class="formula-math">R = ρ·l/S</div></div>
+
+                    <!-- 9 КЛАСС -->
                     <div class="formula-card show" data-class="9" onclick="insFormula('F = m * a')"><div class="formula-title">9 кл · 2-й з. Ньютона</div><div class="formula-math">F = m · a</div></div>
+                    <div class="formula-card show" data-class="9" onclick="insFormula('Ek = (m * v^2) / 2')"><div class="formula-title">9 кл · Кинетич. энергия</div><div class="formula-math">Eк = m·v²/2</div></div>
+                    <div class="formula-card show" data-class="9" onclick="insFormula('Ep = m * g * h')"><div class="formula-title">9 кл · Потенц. энергия</div><div class="formula-math">Eп = m·g·h</div></div>
+
+                    <!-- 10 КЛАСС -->
                     <div class="formula-card show" data-class="10" onclick="insFormula('P * V = (m/M) * R * T')"><div class="formula-title">10 кл · Менделеев</div><div class="formula-math">P·V = (m/M)·R·T</div></div>
+                    <div class="formula-card show" data-class="10" onclick="insFormula('p = m * v')"><div class="formula-title">10 кл · Импульс</div><div class="formula-math">p = m · v</div></div>
+
+                    <!-- 11 КЛАСС -->
+                    <div class="formula-card show" data-class="11" onclick="insFormula('F = k * (q1 * q2) / r^2')"><div class="formula-title">11 кл · Закон Кулона</div><div class="formula-math">F = k·q₁q₂/r²</div></div>
                     <div class="formula-card show" data-class="11" onclick="insFormula('E = m * c^2')"><div class="formula-title">11 кл · Эйнштейн</div><div class="formula-math">E = m · c²</div></div>
                 </div>
+
+                <!-- ==================== АЛГЕБРА ==================== -->
                 <div id="tab-algebra" class="cheat-section" style="display: none;">
-                    <div class="formula-card show" data-class="7" onclick="insFormula('(a+b)^2 = a^2 + 2*a*b + b^2')"><div class="formula-title">7 кл · Квадрат суммы</div><div class="formula-math">(a+b)²</div></div>
+                    <!-- 7 КЛАСС -->
+                    <div class="formula-card show" data-class="7" onclick="insFormula('(a+b)^2 = a^2 + 2*a*b + b^2')"><div class="formula-title">7 кл · Квадрат суммы</div><div class="formula-math">(a+b)² = a²+2ab+b²</div></div>
+                    <div class="formula-card show" data-class="7" onclick="insFormula('(a-b)^2 = a^2 - 2*a*b + b^2')"><div class="formula-title">7 кл · Квадрат разности</div><div class="formula-math">(a-b)² = a²-2ab+b²</div></div>
+                    <div class="formula-card show" data-class="7" onclick="insFormula('a^2 - b^2 = (a-b)*(a+b)')"><div class="formula-title">7 кл · Разность квадратов</div><div class="formula-math">a² - b² = (a-b)(a+b)</div></div>
+                    <div class="formula-card show" data-class="7" onclick="insFormula('y = k * x + b')"><div class="formula-title">7 кл · Линейная функция</div><div class="formula-math">y = kx + b</div></div>
+                    <div class="formula-card show" data-class="7" onclick="insFormula('(a*b)^n = a^n * b^n')"><div class="formula-title">7 кл · Степень произв.</div><div class="formula-math">(ab)ⁿ = aⁿbⁿ</div></div>
+
+                    <!-- 8 КЛАСС -->
                     <div class="formula-card show" data-class="8" onclick="insFormula('D = b^2 - 4*a*c')"><div class="formula-title">8 кл · Дискриминант</div><div class="formula-math">D = b² - 4ac</div></div>
-                    <div class="formula-card show" data-class="9" onclick="insFormula('a_n = a_1 + d*(n-1)')"><div class="formula-title">9 кл · Прогрессия</div><div class="formula-math">aₙ = a₁ + d(n-1)</div></div>
-                    <div class="formula-card show" data-class="10" onclick="insFormula('sin^2(a) + cos^2(a) = 1')"><div class="formula-title">10 кл · Тригонометрия</div><div class="formula-math">sin²α + cos²α = 1</div></div>
-                    <div class="formula-card show" data-class="11" onclick="insFormula('log_a(b) = ln(b) / ln(a)')"><div class="formula-title">11 кл · Логарифм</div><div class="formula-math">logₐ(b)</div></div>
+                    <div class="formula-card show" data-class="8" onclick="insFormula('(-b + sqrt(D)) / (2*a)')"><div class="formula-title">8 кл · Корень x₁</div><div class="formula-math">x₁ = (-b+√D)/2a</div></div>
+                    <div class="formula-card show" data-class="8" onclick="insFormula('x1 + x2 = -b/a')"><div class="formula-title">8 кл · Теорема Виета</div><div class="formula-math">x₁+x₂ = -b/a</div></div>
+                    <div class="formula-card show" data-class="8" onclick="insFormula('sqrt(a*b) = sqrt(a)*sqrt(b)')"><div class="formula-title">8 кл · Корень произв.</div><div class="formula-math">√(ab) = √a·√b</div></div>
+
+                    <!-- 9 КЛАСС -->
+                    <div class="formula-card show" data-class="9" onclick="insFormula('a_n = a_1 + d*(n-1)')"><div class="formula-title">9 кл · Прогрессия</div><div class="formula-math">aₙ = a₁+d(n-1)</div></div>
+                    <div class="formula-card show" data-class="9" onclick="insFormula('b_n = b_1 * q^(n-1)')"><div class="formula-title">9 кл · Геом. прогрессия</div><div class="formula-math">bₙ = b₁·qⁿ⁻¹</div></div>
+
+                    <!-- 10 КЛАСС -->
+                    <div class="formula-card show" data-class="10" onclick="insFormula('sin^2(a) + cos^2(a) = 1')"><div class="formula-title">10 кл · Тригонометрия</div><div class="formula-math">sin²α+cos²α = 1</div></div>
+                    <div class="formula-card show" data-class="10" onclick="insFormula('sin(2a) = 2*sin(a)*cos(a)')"><div class="formula-title">10 кл · Синус двойного</div><div class="formula-math">sin(2α) = 2sinα·cosα</div></div>
+
+                    <!-- 11 КЛАСС -->
+                    <div class="formula-card show" data-class="11" onclick="insFormula('log_a(b) = ln(b) / ln(a)')"><div class="formula-title">11 кл · Логарифм</div><div class="formula-math">logₐ(b) = ln(b)/ln(a)</div></div>
+                    <div class="formula-card show" data-class="11" onclick="insFormula('x^n')"><div class="formula-title">11 кл · Производная</div><div class="formula-math">(xⁿ)' = n·xⁿ⁻¹</div></div>
                 </div>
+
+                <!-- ==================== ГЕОМЕТРИЯ ==================== -->
                 <div id="tab-geometry" class="cheat-section" style="display: none;">
-                    <div class="formula-card show" data-class="7" onclick="insFormula('S = 0.5 * a * h')"><div class="formula-title">7 кл · Треугольник</div><div class="formula-math">S = 0.5·a·h</div></div>
+                    <!-- 7 КЛАСС -->
+                    <div class="formula-card show" data-class="7" onclick="insFormula('S = 0.5 * a * h')"><div class="formula-title">7 кл · Площадь Δ</div><div class="formula-math">S = 0.5·a·h</div></div>
+                    <div class="formula-card show" data-class="7" onclick="insFormula('Сумма углов = 180')"><div class="formula-title">7 кл · Сумма углов Δ</div><div class="formula-math">∠A+∠B+∠C = 180°</div></div>
+                    <div class="formula-card show" data-class="7" onclick="insFormula('P = a + b + c')"><div class="formula-title">7 кл · Периметр Δ</div><div class="formula-math">P = a + b + c</div></div>
+                    <div class="formula-card show" data-class="7" onclick="insFormula('Смежные углы = 180')"><div class="formula-title">7 кл · Смежные углы</div><div class="formula-math">∠1 + ∠2 = 180°</div></div>
+                    <div class="formula-card show" data-class="7" onclick="insFormula('Вертикальные углы равны')"><div class="formula-title">7 кл · Вертикальные</div><div class="formula-math">∠1 = ∠2</div></div>
+
+                    <!-- 8 КЛАСС -->
                     <div class="formula-card show" data-class="8" onclick="insFormula('c^2 = a^2 + b^2')"><div class="formula-title">8 кл · Пифагор</div><div class="formula-math">c² = a² + b²</div></div>
-                    <div class="formula-card show" data-class="9" onclick="insFormula('S = pi * r^2')"><div class="formula-title">9 кл · Круг</div><div class="formula-math">S = π·r²</div></div>
+                    <div class="formula-card show" data-class="8" onclick="insFormula('S = a * b')"><div class="formula-title">8 кл · Площадь прямоуг.</div><div class="formula-math">S = a · b</div></div>
+                    <div class="formula-card show" data-class="8" onclick="insFormula('S = a^2')"><div class="formula-title">8 кл · Площадь квадрата</div><div class="formula-math">S = a²</div></div>
+                    <div class="formula-card show" data-class="8" onclick="insFormula('S = (a+b)/2 * h')"><div class="formula-title">8 кл · Площадь трапеции</div><div class="formula-math">S = (a+b)/2 · h</div></div>
+
+                    <!-- 9 КЛАСС -->
+                    <div class="formula-card show" data-class="9" onclick="insFormula('S = pi * r^2')"><div class="formula-title">9 кл · Площадь круга</div><div class="formula-math">S = π·r²</div></div>
+                    <div class="formula-card show" data-class="9" onclick="insFormula('C = 2 * pi * r')"><div class="formula-title">9 кл · Длина окружности</div><div class="formula-math">C = 2·π·r</div></div>
+                    <div class="formula-card show" data-class="9" onclick="insFormula('c^2 = a^2 + b^2 - 2*a*b*cos(C)')"><div class="formula-title">9 кл · Теорема косинусов</div><div class="formula-math">c²=a²+b²-2ab·cosC</div></div>
+
+                    <!-- 10-11 КЛАСС -->
                     <div class="formula-card show" data-class="10" onclick="insFormula('V = (1/3) * S_osn * h')"><div class="formula-title">10 кл · Пирамида</div><div class="formula-math">V = 1/3·S·h</div></div>
                     <div class="formula-card show" data-class="11" onclick="insFormula('V = (4/3) * pi * r^3')"><div class="formula-title">11 кл · Шар</div><div class="formula-math">V = 4/3·π·r³</div></div>
                 </div>
@@ -329,7 +346,6 @@
         // ================= НАСТРОЙКИ =================
         const settingsModal = document.getElementById('settingsModal');
         const cheatsheetModal = document.getElementById('cheatsheetModal');
-        const calcModal = document.getElementById('calcModal');
         const apiKeyInput = document.getElementById('apiKeyInput');
         const zoomRange = document.getElementById('zoomRange');
         const zoomValue = document.getElementById('zoomValue');
@@ -408,27 +424,6 @@
             });
         }
         renderFilters();
-
-        // ================= КАЛЬКУЛЯТОР =================
-        const cDisp = document.getElementById('calcDisplay');
-        function calcApp(ch) { if (cDisp.value === '0' && !'.+-*/%^'.includes(ch)) cDisp.value = ch; else cDisp.value += ch; }
-        function calcIns(code) { if (cDisp.value === '0') cDisp.value = code; else cDisp.value += code; }
-        function calcClr() { cDisp.value = '0'; }
-        function calcDel() { cDisp.value = cDisp.value.length > 1 ? cDisp.value.slice(0, -1) : '0'; }
-        function calcFn(type) {
-            try {
-                let x = Function('return (' + cDisp.value + ')')();
-                if (type === 'sq') cDisp.value = x * x;
-                if (type === 'sqrt') cDisp.value = Math.sqrt(x);
-            } catch { cDisp.value = '☹️'; }
-        }
-        function calcEq() {
-            try {
-                let res = Function('return (' + cDisp.value + ')')();
-                if (!Number.isFinite(res)) throw 0;
-                cDisp.value = res;
-            } catch { cDisp.value = '☹️'; }
-        }
 
         // ================= ЛОКАЛЬНЫЙ РЕШАТЕЛЬ =================
         function solveLocalMath() {
