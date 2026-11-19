@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <meta name="theme-color" content="#1a1a2e">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🇬🇧</text></svg>">
-    <title>ИИ Тренажер Английского</title>
+    <meta name="theme-color" content="#0d0d12">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
+    <title>Школьный комбайн</title>
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         /* ================= ФОН ================= */
         body {
             margin: 0;
-            padding: 20px 10px;
+            padding: 15px 10px;
             font-family: system-ui, -apple-system, sans-serif;
             color: #eee;
-            display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;
+            display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;
             align-items: flex-start;
             min-height: 100vh;
-            background-color: #1a1a2e;
+            background-color: #0d0d12;
             position: relative;
             overflow-x: hidden;
             background-size: cover;
@@ -33,14 +33,13 @@
             content: "";
             position: fixed;
             inset: 0;
-            background: rgba(26, 26, 46, 0.85); /* Синеватое затемнение */
+            background: rgba(13, 13, 18, 0.85); 
             z-index: -1;
             pointer-events: none;
         }
 
-        /* Стили интерфейса */
         .card {
-            background: rgba(30, 30, 50, 0.9);
+            background: rgba(34, 34, 34, 0.9);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -51,169 +50,463 @@
             max-width: 500px;
         }
 
+        /* ================= ВКЛАДКИ ================= */
+        .tabs {
+            display: flex; gap: 5px; margin-bottom: 15px; 
+            background: #1a1a1a; padding: 5px; border-radius: 10px;
+        }
+        .tab-btn {
+            flex: 1; padding: 12px 5px; border: none; border-radius: 8px;
+            background: transparent; color: #aaa; font-size: 14px; font-weight: bold;
+            cursor: pointer; transition: 0.2s;
+        }
+        .tab-btn.active { background: #37c; color: #fff; }
+        .tab-btn:active { transform: scale(0.95); }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s; }
+
+        /* ================= ЭЛЕМЕНТЫ ================= */
         .card-header { margin: 0 0 12px; font-size: 18px; color: #fff; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
         .icon-btn { cursor: pointer; font-size: 22px; background: none; border: none; padding: 0; color: #eee; }
-        .icon-btn:active { transform: scale(0.9); }
-
-        /* Ввод текста */
-        #mainInput {
-            width: 100%; min-height: 100px; padding: 12px; font-size: 16px;
-            border-radius: 8px; border: 1px solid #333; background: #0f0f1a; color: #eee;
+        
+        textarea {
+            width: 100%; min-height: 90px; padding: 12px; font-size: 16px;
+            border-radius: 8px; border: 1px solid #333; background: #111; color: #eee;
             resize: vertical; font-family: inherit;
         }
-        #mainInput:focus { outline: none; border-color: #e63946; }
+        textarea:focus { outline: none; border-color: #37c; }
 
         .row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
-        .btn-primary { flex: 1; padding: 14px; background: #e63946; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; }
-        .btn-secondary { padding: 14px; background: #457b9d; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; }
+        .btn-main { flex: 1; padding: 14px; background: #37c; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; }
+        .btn-ai { padding: 14px; background: #a3a; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; }
         .btn-outline { padding: 14px; background: #333; color: #fff; border: none; border-radius: 8px; font-size: 15px; }
+        .btn-main:active, .btn-ai:active, .btn-outline:active { transform: scale(0.97); }
 
-        #resultBox {
-            margin-top: 15px; padding: 15px; background: rgba(15, 15, 26, 0.9); border-radius: 8px;
+        .result-box {
+            display: none; margin-top: 15px; padding: 15px; background: rgba(15, 15, 15, 0.9); border-radius: 8px;
             font-size: 15px; line-height: 1.6; min-height: 60px; color: #ddd;
-            font-family: inherit; white-space: pre-wrap;
-            max-height: 400px; overflow-y: auto;
+            font-family: inherit; white-space: pre-wrap; max-height: 400px; overflow-y: auto;
         }
-        #resultBox .err { color: #ff6b6b; }
-        #resultBox .ai-label { color: #a8dadc; font-weight: bold; margin-bottom: 8px; display: block; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        .result-box .err { color: #ff6b6b; }
+        .result-box .ai-label { color: #a8dadc; font-weight: bold; margin-bottom: 8px; display: block; border-bottom: 1px solid #333; padding-bottom: 5px; }
 
-        /* Теги быстрых действий */
         .quick-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
         .tag { background: #2b2b40; color: #ccc; border: none; padding: 8px 12px; border-radius: 20px; font-size: 13px; cursor: pointer; }
-        .tag:active { background: #457b9d; color: #fff; }
+        .tag:active { background: #37c; color: #fff; }
 
-        /* Модалки */
+        /* ================= КАЛЬКУЛЯТОР ================= */
+        #calcDisplay {
+            width: 100%; font-size: 28px; padding: 10px; text-align: right;
+            margin-bottom: 10px; border: none; border-radius: 6px;
+            background: #111; color: #0f0; font-family: monospace;
+        }
+        .keys { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+        .keys button { padding: 14px 0; font-size: 16px; border: none; border-radius: 6px; background: #444; color: #fff; font-weight: bold; }
+        .keys button:active { background: #555; }
+        .keys .op { background: #f80; color: #000; }
+        .keys .fn { background: #37c; }
+
+        /* ================= МОДАЛКИ ================= */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.85); z-index: 100; justify-content: center; align-items: center; padding: 15px; }
         .modal.show { display: flex; }
-        .modal-box { background: #1e1e32; padding: 20px; border-radius: 12px; width: 100%; max-width: 450px; border: 1px solid #333; display: flex; flex-direction: column; max-height: 90vh; }
+        .modal-box { background: #222; padding: 20px; border-radius: 12px; width: 100%; max-width: 450px; border: 1px solid #444; display: flex; flex-direction: column; max-height: 90vh; }
         .modal-box h3 { margin: 0 0 16px; font-size: 18px; display: flex; justify-content: space-between; align-items: center; color: #fff; }
         .modal-box h3 span.close { cursor: pointer; color: #888; font-size: 24px; }
         
         .setting-group { margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #333; }
         .setting-group:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
         .setting-group label { display: block; font-size: 14px; color: #aaa; margin-bottom: 8px; }
-        .setting-group input[type="password"] { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #333; background: #0f0f1a; color: #eee; font-family: monospace; font-size: 14px; }
-        .setting-group button { width: 100%; padding: 12px; border-radius: 6px; border: none; font-size: 15px; background: #457b9d; color: #fff; }
+        .setting-group input[type="password"] { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #333; background: #111; color: #eee; font-family: monospace; font-size: 14px; }
+        .setting-group button { width: 100%; padding: 12px; border-radius: 6px; border: none; font-size: 15px; background: #37c; color: #fff; }
         .note { font-size: 12px; color: #888; margin-top: 8px; }
-        .note a { color: #a8dadc; }
+        .note a { color: #c4c; }
+
+        /* ШПАРГАЛКА */
+        .modal-box.cheatsheet { width: 100%; height: 100%; max-height: 100vh; max-width: 100%; border-radius: 0; padding: 15px; }
+        .cheat-tabs { display: flex; gap: 5px; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .cheat-tabs button { flex: 1; padding: 10px 5px; border: none; border-radius: 6px; background: #333; color: #ccc; font-size: 14px; font-weight: bold; }
+        .cheat-tabs button.active { background: #37c; color: #fff; }
+        
+        .cheat-filters { display: flex; gap: 6px; margin-bottom: 15px; flex-wrap: wrap; }
+        .filter-btn { padding: 8px 12px; border: 1px solid #444; border-radius: 20px; background: transparent; color: #aaa; font-size: 13px; }
+        .filter-btn.active { background: rgba(55, 124, 220, 0.2); border-color: #37c; color: #6af; }
+        
+        .cheat-content { flex: 1; overflow-y: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-content: start; }
+        
+        .formula-card {
+            background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 10px;
+            display: flex; flex-direction: column; gap: 4px; display: none;
+        }
+        .formula-card.show { display: flex; }
+        .formula-card:active { border-color: #37c; background: #222; }
+        .formula-title { font-size: 11px; color: #888; }
+        .formula-math { font-size: 15px; color: #eee; font-family: 'Courier New', monospace; font-weight: bold; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <!-- БЛОК 1: ПЕРЕВОДЧИК -->
     <div class="card">
-        <div class="card-header">
-            <span>📖 Переводчик и разбор</span>
-            <button class="icon-btn" id="openSettings">⚙️</button>
+        <!-- ВКЛАДКИ -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchMainTab('math')">🧮 Науки</button>
+            <button class="tab-btn" onclick="switchMainTab('eng')">🇬🇧 Английский</button>
         </div>
-        <div class="quick-tags">
-            <button class="tag" onclick="setPrompt('Переведи этот текст на русский и сделай грамматический разбор:\n\n')">Перевод + Грамматика</button>
+
+        <!-- ================= ВКЛАДКА 1: МАТЕМАТИКА И ФИЗИКА ================= -->
+        <div id="tab-math" class="tab-content active">
+            <div class="card-header">
+                <span>Решатель (Алгебра, Физика)</span>
+                <div style="display:flex; gap:15px;">
+                    <button class="icon-btn" onclick="cheatsheetModal.classList.add('show')">📚</button>
+                    <button class="icon-btn" onclick="settingsModal.classList.add('show')">⚙️</button>
+                </div>
+            </div>
+            
+            <div class="quick-tags">
+                <button class="tag" onclick="setPrompt('mathInput', 'Q = c * m * (t2 - t1)')">Теплота</button>
+                <button class="tag" onclick="setPrompt('mathInput', 'I = U / R')">Закон Ома</button>
+                <button class="tag" onclick="setPrompt('mathInput', 'реши уравнение 2x² - 5x + 2 = 0')">Квадратное ур-е</button>
+            </div>
+
+            <textarea id="mathInput" placeholder="Напиши задачу по физике, алгебре или геометрии..."></textarea>
+            <div id="ocrRaw" style="display:none; font-size:11px; color:#888; margin-top:5px;"></div>
+            
+            <div class="row" style="margin-bottom: 10px;">
+                <button class="btn-outline" style="flex:1; font-size:13px;" onclick="document.getElementById('photoInput').click()">📷 Загрузить фото</button>
+                <input type="file" id="photoInput" accept="image/*" capture="environment" style="display:none;" onchange="handlePhoto(this)">
+            </div>
+
+            <div class="row">
+                <button class="btn-main" onclick="solveLocalMath()">Решить</button>
+                <button class="btn-ai" onclick="askAI('mathInput', 'mathResult', 'math')">🤖 Спросить ИИ</button>
+                <button class="btn-outline" onclick="clearBox('mathInput', 'mathResult')">Сброс</button>
+            </div>
+            <div id="mathResult" class="result-box"></div>
         </div>
-        <textarea id="translateInput" placeholder="Вставь сюда текст на английском..."></textarea>
-        <div class="row">
-            <button class="btn-primary" onclick="aiTranslate()">Перевести</button>
-            <button class="btn-outline" onclick="document.getElementById('translateInput').value=''">Очистить</button>
+
+        <!-- ================= ВКЛАДКА 2: АНГЛИЙСКИЙ ================= -->
+        <div id="tab-eng" class="tab-content">
+            <div class="card-header">
+                <span>ИИ Репетитор</span>
+            </div>
+            
+            <div class="quick-tags">
+                <button class="tag" onclick="setPrompt('engInput', 'Проверь мой текст на ошибки и объясни их. Вот текст:\n\n')">Проверка ошибок</button>
+                <button class="tag" onclick="setPrompt('engInput', 'Объясни правило Present Perfect простыми словами. Приведи 3 примера.')">Present Perfect</button>
+                <button class="tag" onclick="setPrompt('engInput', 'Переведи на русский и сделай грамматический разбор:\n\n')">Перевод</button>
+            </div>
+
+            <textarea id="engInput" placeholder="Вставь текст на английском или задай вопрос..."></textarea>
+            
+            <div class="row">
+                <button class="btn-main" style="background:#e63946;" onclick="askAI('engInput', 'engResult', 'eng')">Спросить ИИ</button>
+                <button class="btn-outline" onclick="clearBox('engInput', 'engResult')">Сброс</button>
+            </div>
+            <div id="engResult" class="result-box"></div>
         </div>
-        <div id="translateResult" style="display:none; margin-top: 15px; padding: 15px; background: rgba(15, 15, 26, 0.9); border-radius: 8px; font-size: 15px; line-height: 1.6; white-space: pre-wrap;"></div>
     </div>
 
-    <!-- БЛОК 2: ИИ-РЕПЕТИТОР -->
-    <div class="card">
-        <div class="card-header">
-            <span>🤖 ИИ-Репетитор</span>
+    <!-- ВСТРОЕННЫЙ КАЛЬКУЛЯТОР (ВСПЛЫВАЮЩИЙ) -->
+    <div class="modal" id="calcModal">
+        <div class="modal-box" style="max-width: 350px;">
+            <h3>🧮 Калькулятор <span class="close" onclick="calcModal.classList.remove('show')">✕</span></h3>
+            <input id="calcDisplay" readonly value="0">
+            <div class="keys">
+                <button class="fn" onclick="calcFn('sq')">x²</button>
+                <button class="fn" onclick="calcFn('sqrt')">√</button>
+                <button class="fn" onclick="calcIns('Math.PI')">π</button>
+                <button class="fn" onclick="calcClr()">C</button>
+                <button class="fn" onclick="calcDel()">⌫</button>
+                <button onclick="calcApp('7')">7</button>
+                <button onclick="calcApp('8')">8</button>
+                <button onclick="calcApp('9')">9</button>
+                <button class="op" onclick="calcApp('/')">/</button>
+                <button class="op" onclick="calcApp('*')">×</button>
+                <button onclick="calcApp('4')">4</button>
+                <button onclick="calcApp('5')">5</button>
+                <button onclick="calcApp('6')">6</button>
+                <button class="op" onclick="calcApp('-')">−</button>
+                <button class="op" onclick="calcApp('+')">+</button>
+                <button onclick="calcApp('1')">1</button>
+                <button onclick="calcApp('2')">2</button>
+                <button onclick="calcApp('3')">3</button>
+                <button onclick="calcApp('.')">.</button>
+                <button class="op" style="background:#37c;" onclick="calcEq()">=</button>
+                <button onclick="calcApp('0')" style="grid-column: span 2;">0</button>
+                <button onclick="calcIns('-')">±</button>
+                <button onclick="calcApp('%')">%</button>
+            </div>
         </div>
-        <div class="quick-tags">
-            <button class="tag" onclick="setPrompt('Проверь мой текст на ошибки и объясни их. Вот текст:\n\n')">Проверка ошибок</button>
-            <button class="tag" onclick="setPrompt('Объясни правило Present Perfect простыми словами. Приведи 3 примера.')">Present Perfect</button>
-            <button class="tag" onclick="setPrompt('Составь тест из 5 вопросов на тему Past Simple с вариантами ответов.')">Тест: Past Simple</button>
-        </div>
-        <textarea id="aiInput" placeholder="Спроси о грамматике, попроси проверить текст или составить тест..."></textarea>
-        <div class="row">
-            <button class="btn-primary" style="background:#a3a;" onclick="aiAsk()">Спросить ИИ</button>
-            <button class="btn-outline" onclick="document.getElementById('aiInput').value=''">Очистить</button>
-        </div>
-        <div id="aiResult" style="display:none; margin-top: 15px; padding: 15px; background: rgba(15, 15, 26, 0.9); border-radius: 8px; font-size: 15px; line-height: 1.6; white-space: pre-wrap;"></div>
     </div>
 
     <!-- МОДАЛКА НАСТРОЕК -->
     <div class="modal" id="settingsModal">
         <div class="modal-box">
-            <h3>⚙️ Настройки <span class="close" onclick="closeSettings()">✕</span></h3>
+            <h3>⚙️ Настройки <span class="close" onclick="settingsModal.classList.remove('show')">✕</span></h3>
             
             <div class="setting-group">
-                <label>🔍 Масштаб интерфейса</label>
+                <label>🔍 Масштаб</label>
                 <input type="range" id="zoomRange" min="80" max="150" value="100" step="5" style="width: 100%; margin-bottom: 5px;">
                 <div style="display: flex; justify-content: space-between; font-size: 12px; color: #666;">
-                    <span>Маленький</span>
-                    <span id="zoomValue">100%</span>
-                    <span>Большой</span>
+                    <span>Меньше</span><span id="zoomValue">100%</span><span>Больше</span>
                 </div>
+            </div>
+
+            <div class="setting-group">
+                <label>🖼️ Обои фона</label>
+                <button onclick="document.getElementById('bgInput').click()">Выбрать картинку</button>
+                <input type="file" id="bgInput" accept="image/*" style="display:none;" onchange="setBg(this)">
             </div>
 
             <div class="setting-group">
                 <label>🤖 OpenRouter API Key</label>
                 <input type="password" id="apiKeyInput" placeholder="sk-or-v1-...">
-                <div class="note">Ключ бесплатный: <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a>.</div>
+                <div class="note">Ключ: <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a>.</div>
             </div>
-            <button onclick="saveSettings()" style="background: #e63946; padding: 12px; border-radius: 6px; border: none; color: #fff; font-size: 15px; margin-top: 10px; font-weight: bold;">Сохранить</button>
+            <button onclick="saveSettings()" style="background: #37c; padding: 12px; border-radius: 6px; border: none; color: #fff; font-size: 15px; font-weight:bold;">Сохранить</button>
+        </div>
+    </div>
+
+    <!-- ШПАРГАЛКА -->
+    <div class="modal" id="cheatsheetModal">
+        <div class="modal-box cheatsheet">
+            <h3>📚 Шпаргалка <span class="close" onclick="cheatsheetModal.classList.remove('show')">✕</span></h3>
+            <div class="cheat-tabs">
+                <button class="active" onclick="switchCheatTab('physics')">⚡ Физика</button>
+                <button onclick="switchCheatTab('algebra')">📐 Алгебра</button>
+                <button onclick="switchCheatTab('geometry')">📏 Геометрия</button>
+            </div>
+            <div class="cheat-filters" id="cheatFilters"></div>
+            <div class="cheat-content" id="cheatContent">
+                <div id="tab-physics" class="cheat-section active" style="display: contents;">
+                    <div class="formula-card show" data-class="7" onclick="insFormula('v = S / t')"><div class="formula-title">7 кл · Скорость</div><div class="formula-math">v = S / t</div></div>
+                    <div class="formula-card show" data-class="7" onclick="insFormula('p = m / V')"><div class="formula-title">7 кл · Плотность</div><div class="formula-math">ρ = m / V</div></div>
+                    <div class="formula-card show" data-class="8" onclick="insFormula('Q = c * m * (t2 - t1)')"><div class="formula-title">8 кл · Теплота</div><div class="formula-math">Q = c · m · Δt</div></div>
+                    <div class="formula-card show" data-class="8" onclick="insFormula('I = U / R')"><div class="formula-title">8 кл · Закон Ома</div><div class="formula-math">I = U / R</div></div>
+                    <div class="formula-card show" data-class="9" onclick="insFormula('F = m * a')"><div class="formula-title">9 кл · 2-й з. Ньютона</div><div class="formula-math">F = m · a</div></div>
+                    <div class="formula-card show" data-class="10" onclick="insFormula('P * V = (m/M) * R * T')"><div class="formula-title">10 кл · Менделеев</div><div class="formula-math">P·V = (m/M)·R·T</div></div>
+                    <div class="formula-card show" data-class="11" onclick="insFormula('E = m * c^2')"><div class="formula-title">11 кл · Эйнштейн</div><div class="formula-math">E = m · c²</div></div>
+                </div>
+                <div id="tab-algebra" class="cheat-section" style="display: none;">
+                    <div class="formula-card show" data-class="7" onclick="insFormula('(a+b)^2 = a^2 + 2*a*b + b^2')"><div class="formula-title">7 кл · Квадрат суммы</div><div class="formula-math">(a+b)²</div></div>
+                    <div class="formula-card show" data-class="8" onclick="insFormula('D = b^2 - 4*a*c')"><div class="formula-title">8 кл · Дискриминант</div><div class="formula-math">D = b² - 4ac</div></div>
+                    <div class="formula-card show" data-class="9" onclick="insFormula('a_n = a_1 + d*(n-1)')"><div class="formula-title">9 кл · Прогрессия</div><div class="formula-math">aₙ = a₁ + d(n-1)</div></div>
+                    <div class="formula-card show" data-class="10" onclick="insFormula('sin^2(a) + cos^2(a) = 1')"><div class="formula-title">10 кл · Тригонометрия</div><div class="formula-math">sin²α + cos²α = 1</div></div>
+                    <div class="formula-card show" data-class="11" onclick="insFormula('log_a(b) = ln(b) / ln(a)')"><div class="formula-title">11 кл · Логарифм</div><div class="formula-math">logₐ(b)</div></div>
+                </div>
+                <div id="tab-geometry" class="cheat-section" style="display: none;">
+                    <div class="formula-card show" data-class="7" onclick="insFormula('S = 0.5 * a * h')"><div class="formula-title">7 кл · Треугольник</div><div class="formula-math">S = 0.5·a·h</div></div>
+                    <div class="formula-card show" data-class="8" onclick="insFormula('c^2 = a^2 + b^2')"><div class="formula-title">8 кл · Пифагор</div><div class="formula-math">c² = a² + b²</div></div>
+                    <div class="formula-card show" data-class="9" onclick="insFormula('S = pi * r^2')"><div class="formula-title">9 кл · Круг</div><div class="formula-math">S = π·r²</div></div>
+                    <div class="formula-card show" data-class="10" onclick="insFormula('V = (1/3) * S_osn * h')"><div class="formula-title">10 кл · Пирамида</div><div class="formula-math">V = 1/3·S·h</div></div>
+                    <div class="formula-card show" data-class="11" onclick="insFormula('V = (4/3) * pi * r^3')"><div class="formula-title">11 кл · Шар</div><div class="formula-math">V = 4/3·π·r³</div></div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
+        // ================= ВКЛАДКИ =================
+        function switchMainTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+        }
+
+        function switchCheatTab(tabId) {
+            document.querySelectorAll('.cheat-tabs button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            document.querySelectorAll('.cheat-section').forEach(sec => sec.style.display = 'none');
+            document.getElementById('tab-' + tabId).style.display = (tabId === 'physics') ? 'contents' : 'block';
+            renderFilters();
+            filterByClass('all');
+        }
+
         // ================= НАСТРОЙКИ =================
         const settingsModal = document.getElementById('settingsModal');
+        const cheatsheetModal = document.getElementById('cheatsheetModal');
+        const calcModal = document.getElementById('calcModal');
         const apiKeyInput = document.getElementById('apiKeyInput');
         const zoomRange = document.getElementById('zoomRange');
         const zoomValue = document.getElementById('zoomValue');
 
-        function applyZoom(percent) {
-            document.body.style.zoom = percent + '%';
-            zoomValue.textContent = percent + '%';
-            localStorage.setItem('custom_zoom', percent);
-        }
-
-        zoomRange.oninput = (e) => applyZoom(e.target.value);
+        zoomRange.oninput = (e) => {
+            document.body.style.zoom = e.target.value + '%';
+            zoomValue.textContent = e.target.value + '%';
+            localStorage.setItem('custom_zoom', e.target.value);
+        };
 
         function initSettings() {
             const savedKey = localStorage.getItem('openrouter_key');
             const savedZoom = localStorage.getItem('custom_zoom');
+            const savedBg = localStorage.getItem('custom_background');
             if (savedKey) apiKeyInput.value = savedKey;
-            if (savedZoom !== null) { zoomRange.value = savedZoom; applyZoom(savedZoom); }
+            if (savedZoom !== null) { zoomRange.value = savedZoom; document.body.style.zoom = savedZoom + '%'; zoomValue.textContent = savedZoom + '%'; }
+            if (savedBg) document.body.style.backgroundImage = `url('${savedBg}')`;
         }
         initSettings();
-
-        document.getElementById('openSettings').onclick = () => settingsModal.classList.add('show');
-        window.closeSettings = () => settingsModal.classList.remove('show');
-        settingsModal.onclick = e => { if (e.target === settingsModal) closeSettings(); };
 
         window.saveSettings = () => {
             const key = apiKeyInput.value.trim();
             if (key) localStorage.setItem('openrouter_key', key);
             else localStorage.removeItem('openrouter_key');
-            closeSettings();
+            settingsModal.classList.remove('show');
         };
 
-        function getApiKey() { return localStorage.getItem('openrouter_key') || ''; }
+        window.setBg = (input) => {
+            const file = input.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const base64 = e.target.result;
+                document.body.style.backgroundImage = `url('${base64}')`;
+                try { localStorage.setItem('custom_background', base64); } catch(err) { alert('Файл большой.'); }
+            };
+            reader.readAsDataURL(file);
+        };
 
         // ================= ВСПОМОГАТЕЛЬНЫЕ =================
-        function setPrompt(text) {
-            // Находим активное текстовое поле (в котором сейчас курсор) или просто кидаем в ИИ
-            const aiInput = document.getElementById('aiInput');
-            aiInput.value = text;
-            aiInput.focus();
+        function setPrompt(inputId, text) {
+            document.getElementById(inputId).value = text;
+            document.getElementById(inputId).focus();
         }
 
-        async function callAI(systemPrompt, userText, resultElement, isTranslate = false) {
-            const key = getApiKey();
-            if (!key) {
-                if (confirm('Нужен API-ключ. Открыть настройки?')) settingsModal.classList.add('show');
-                return;
-            }
-            if (!userText.trim()) { alert('Введи текст!'); return; }
+        function clearBox(inputId, resultId) {
+            document.getElementById(inputId).value = '';
+            document.getElementById(resultId).style.display = 'none';
+        }
 
-            resultElement.style.display = 'block';
-            resultElement.innerHTML = '<span class="ai-label">🤖 Нейросеть думает…</span>';
-            
+        function insFormula(formula) {
+            document.getElementById('mathInput').value = formula;
+            document.getElementById('mathInput').focus();
+            cheatsheetModal.classList.remove('show');
+        }
+
+        function renderFilters() {
+            const box = document.getElementById('cheatFilters');
+            box.innerHTML = `<button class="filter-btn active" onclick="filterByClass('all', this)">Все</button>`;
+            ['7','8','9','10','11'].forEach(c => {
+                const btn = document.createElement('button');
+                btn.className = 'filter-btn'; btn.textContent = c + ' кл';
+                btn.onclick = function() { filterByClass(c, this); };
+                box.appendChild(btn);
+            });
+        }
+
+        function filterByClass(className, btnElement) {
+            if (btnElement) {
+                document.querySelectorAll('#cheatFilters .filter-btn').forEach(btn => btn.classList.remove('active'));
+                btnElement.classList.add('active');
+            }
+            const activeTab = document.querySelector('.cheat-section[style*="contents"], .cheat-section[style*="block"]').id.replace('tab-', '');
+            document.querySelectorAll('#tab-' + activeTab + ' .formula-card').forEach(card => {
+                if (className === 'all' || card.getAttribute('data-class') === className) card.classList.add('show');
+                else card.classList.remove('show');
+            });
+        }
+        renderFilters();
+
+        // ================= КАЛЬКУЛЯТОР =================
+        const cDisp = document.getElementById('calcDisplay');
+        function calcApp(ch) { if (cDisp.value === '0' && !'.+-*/%^'.includes(ch)) cDisp.value = ch; else cDisp.value += ch; }
+        function calcIns(code) { if (cDisp.value === '0') cDisp.value = code; else cDisp.value += code; }
+        function calcClr() { cDisp.value = '0'; }
+        function calcDel() { cDisp.value = cDisp.value.length > 1 ? cDisp.value.slice(0, -1) : '0'; }
+        function calcFn(type) {
+            try {
+                let x = Function('return (' + cDisp.value + ')')();
+                if (type === 'sq') cDisp.value = x * x;
+                if (type === 'sqrt') cDisp.value = Math.sqrt(x);
+            } catch { cDisp.value = '☹️'; }
+        }
+        function calcEq() {
+            try {
+                let res = Function('return (' + cDisp.value + ')')();
+                if (!Number.isFinite(res)) throw 0;
+                cDisp.value = res;
+            } catch { cDisp.value = '☹️'; }
+        }
+
+        // ================= ЛОКАЛЬНЫЙ РЕШАТЕЛЬ =================
+        function solveLocalMath() {
+            const raw = document.getElementById('mathInput').value.trim();
+            const resBox = document.getElementById('mathResult');
+            resBox.style.display = 'block';
+            if (!raw) { resBox.innerHTML = 'Введи задачу.'; return; }
+
+            const t = raw.toLowerCase().replace(/ё/g, 'е');
+            const nums = (t.match(/-?\d+(?:[.,]\d+)?/g) || []).map(s => parseFloat(s.replace(',', '.')));
+            const has = (...w) => w.every(x => t.includes(x));
+            const hasAny = (...w) => w.some(x => t.includes(x));
+            const fmt = n => +n.toFixed(4);
+
+            try {
+                if (hasAny('теплот', 'нагрев') && hasAny('масс', 'кг') && hasAny('температур', 't1', 't2', '°c') && nums.length >= 4) {
+                    const m = nums[0], c = nums[1], t1 = nums[2], t2 = nums[3]; const Q = c * m * (t2 - t1);
+                    return resBox.innerHTML = `📝 ДАНО:\nm = ${m} кг\nc = ${c}\nt₁ = ${t1}°C\nt₂ = ${t2}°C\n\n📐 РЕШЕНИЕ:\nQ = c·m·(t₂−t₁)\nQ = ${c}·${m}·(${t2}−${t1}) = ${fmt(Q)} Дж\n\n✅ ОТВЕТ: ${fmt(Q)} Дж`;
+                }
+                if (hasAny('сила тока', 'ток', 'i=') && hasAny('напряжен', 'вольт', 'u=') && hasAny('сопротивлен', 'ом', 'r=') && nums.length >= 2) {
+                    const U = nums[0], R = nums[1];
+                    return resBox.innerHTML = `📝 ДАНО:\nU = ${U} В\nR = ${R} Ом\n\n📐 РЕШЕНИЕ:\nI = U / R = ${U} / ${R} = ${fmt(U/R)} А\n\n✅ ОТВЕТ: ${fmt(U/R)} А`;
+                }
+                if (hasAny('скорость', 'v=') && hasAny('путь', 'расстояние', 's=') && hasAny('время', 't=') && nums.length >= 2) {
+                    const S = nums[0], T = nums[1];
+                    return resBox.innerHTML = `📝 ДАНО:\nS = ${S} м\nt = ${T} с\n\n📐 РЕШЕНИЕ:\nv = S / t = ${S} / ${T} = ${fmt(S/T)} м/с\n\n✅ ОТВЕТ: ${fmt(S/T)} м/с`;
+                }
+                if (hasAny('уравнени', 'реши') && hasAny('x²', 'x^2') && nums.length >= 3) {
+                    const a = nums[0], b = nums[1], c = nums[2]; const D = b*b - 4*a*c;
+                    let r = `📝 Уравнение: ${a}x² + ${b}x + ${c} = 0\nD = ${b}² - 4·${a}·${c} = ${fmt(D)}\n`;
+                    if (D < 0) r += `Корней нет.`; else if (D === 0) r += `x = ${fmt(-b/(2*a))}`;
+                    else r += `x₁ = ${fmt((-b+Math.sqrt(D))/(2*a))}\nx₂ = ${fmt((-b-Math.sqrt(D))/(2*a))}`;
+                    return resBox.innerHTML = r;
+                }
+                throw new Error('Локальный решатель не понял. Нажми «🤖 Спросить ИИ»!');
+            } catch (err) { resBox.innerHTML = '☹️ ' + err.message; }
+        }
+
+        // ================= OCR ФОТО =================
+        async function handlePhoto(input) {
+            const file = input.files[0]; if (!file) return;
+            const resBox = document.getElementById('mathResult');
+            resBox.style.display = 'block';
+            resBox.innerHTML = '⏳ Распознаю текст с фото...';
+            try {
+                if (!window.ocrWorker) {
+                    window.ocrWorker = await Tesseract.createWorker('rus+eng', 1, {
+                        logger: m => { if (m.status === 'recognizing text') resBox.innerHTML = `⏳ Распознаю… ${Math.round(m.progress * 100)}%`; },
+                        tessedit_char_whitelist: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя∠∆∟°π·+−=()[]{}.,:;/-'
+                    });
+                }
+                const { data: { text } } = await window.ocrWorker.recognize(file);
+                const cleaned = text.replace(/\|/g, '1').trim();
+                document.getElementById('mathInput').value = cleaned;
+                resBox.innerHTML = '✓ Текст распознан! Проверь и нажми "Решить".';
+            } catch (err) { resBox.innerHTML = '☹️ Ошибка OCR: ' + err.message; }
+        }
+
+        // ================= ИИ =================
+        function getApiKey() { return localStorage.getItem('openrouter_key') || ''; }
+        const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+        async function askAI(inputId, resultId, mode) {
+            const key = getApiKey();
+            if (!key) { if (confirm('Нужен ключ OpenRouter. Открыть настройки?')) settingsModal.classList.add('show'); return; }
+            const task = document.getElementById(inputId).value.trim();
+            const resBox = document.getElementById(resultId);
+            resBox.style.display = 'block';
+            if (!task) { resBox.innerHTML = 'Введи текст.'; return; }
+
+            let sysPrompt = '';
+            if (mode === 'math') {
+                sysPrompt = 'Ты — строгий учитель физики и математики. ОБЯЗАТЕЛЬНО оформляй решение по шаблону:\nДАНО:\n...\nСИ:\n...\nРЕШЕНИЕ:\n...\nОТВЕТ:\n...\n\nНЕ ИСПОЛЬЗУЙ LaTeX. Пиши обычным текстом, используя символы ×, ÷, ², ³, √, π, °.';
+            } else {
+                sysPrompt = 'Ты — репетитор по английскому. Переводи, проверяй ошибки, объясняй грамматику простыми словами. Отвечай на русском. Не используй сложное форматирование.';
+            }
+
+            resBox.innerHTML = '<span class="ai-label">🤖 Нейросеть думает…</span>';
             const models = ['meta-llama/llama-3.3-70b-instruct:free', 'qwen/qwen-2.5-72b-instruct:free', 'google/gemini-flash-1.5:free', 'deepseek/deepseek-chat'];
             let lastError = null;
 
@@ -221,48 +514,22 @@
                 try {
                     const resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
                         method: 'POST',
-                        headers: { 'Authorization': 'Bearer ' + key, 'Content-Type': 'application/json', 'HTTP-Referer': location.href, 'X-Title': 'EnglishApp' },
+                        headers: { 'Authorization': 'Bearer ' + key, 'Content-Type': 'application/json', 'HTTP-Referer': location.href },
                         body: JSON.stringify({
                             model: model,
-                            messages: [
-                                { role: 'system', content: systemPrompt },
-                                { role: 'user', content: userText }
-                            ], temperature: 0.2
+                            messages: [{ role: 'system', content: sysPrompt }, { role: 'user', content: 'Запрос:\n' + task }],
+                            temperature: 0.1
                         })
                     });
-
-                    if (resp.status === 429) { lastError = new Error(`${model} перегружена`); await new Promise(r => setTimeout(r, 1500)); continue; }
+                    if (resp.status === 429) { lastError = new Error(`${model} занята`); await sleep(1500); continue; }
                     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-                    
                     const data = await resp.json();
-                    let text = data?.choices?.[0]?.message?.content;
-                    
-                    // Очистка от маркдауна
-                    text = text.replace(/\*\*(.+?)\*\*/g, '$1').replace(/^#{1,6}\s*/gm, '').replace(/```[\w]*\n?/g, '').replace(/```/g, '');
-                    
-                    resultElement.innerHTML = `<span class="ai-label">🤖 Ответ ИИ:</span>\n\n` + text;
-                    return; // Успех, выходим
+                    let cleaned = data?.choices?.[0]?.message?.content.replace(/\*\*(.+?)\*\*/g, '$1').replace(/^#{1,6}\s*/gm, '');
+                    resBox.innerHTML = `<span class="ai-label">🤖 Ответ (${model.split('/')[1].split(':')[0]}):</span>\n\n` + cleaned;
+                    return;
                 } catch (err) { lastError = err; }
             }
-            resultElement.innerHTML = '<span class="err">☹️ Все модели перегружены. Попробуй еще раз. Ошибка: ' + (lastError ? lastError.message : 'неизвестно') + '</span>';
-        }
-
-        // ================= ФУНКЦИИ КНОПОК =================
-        
-        // Перевод
-        function aiTranslate() {
-            const text = document.getElementById('translateInput').value;
-            const resBox = document.getElementById('translateResult');
-            const sysPrompt = "Ты профессиональный переводчик. Переведи текст на русский язык. Оформи ответ так:\n\nПеревод:\n(твой перевод)\n\nТранскрипция:\n(если это одно слово или короткая фраза, напиши транскрипцию)\n\nГрамматика:\n(объясни главные грамматические конструкции, которые использованы в тексте)";
-            callAI(sysPrompt, 'Текст:\n' + text, resBox);
-        }
-
-        // ИИ-репетитор (свободный вопрос)
-        function aiAsk() {
-            const text = document.getElementById('aiInput').value;
-            const resBox = document.getElementById('aiResult');
-            const sysPrompt = "Ты — строгий, но добрый репетитор по английскому языку. Отвечай на русском языке. Если тебя просят проверить текст, найди ошибки, исправь их и объясни правило. Если просят объяснить правило — объясни простыми словами и дай 2-3 примера с переводом. Если просят тест — сделай 5 вопросов с вариантами ответов (A, B, C, D) и в самом конце дай правильные ответы. Пиши обычным текстом, без сложного форматирования и LaTeX.";
-            callAI(sysPrompt, 'Запрос:\n' + text, resBox);
+            resBox.innerHTML = '<span class="err">☹️ Все модели перегружены. Последняя ошибка: ' + (lastError ? lastError.message : 'неизвестно') + '</span>';
         }
     </script>
 </body>
